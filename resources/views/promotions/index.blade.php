@@ -1,0 +1,263 @@
+@extends('layouts.store')
+
+@section('content')
+<div class="container" style="max-width: 900px; margin: 3rem auto; padding: 0 1rem;">
+    <div style="text-align: center; margin-bottom: 3rem;">
+        <h2 style="font-size: 2.2rem; color: var(--color-navy-dark); font-weight: 700; margin-bottom: 0.5rem; font-family: 'Prompt', sans-serif;">🎉 คูปองส่วนลด & โปรโมชันพิเศษ</h2>
+        <p style="color: var(--color-grey); font-size: 1.1rem;">เก็บโค้ดส่วนลดด้านล่างไปใช้ในขั้นตอนชำระเงินเพื่อรับส่วนลดสุดคุ้ม!</p>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+        @forelse($coupons as $coupon)
+        @php
+            $isCollected = in_array($coupon->id, $collectedCouponIds);
+        @endphp
+        <div style="background: white; border: 2px dashed #FF4500; border-radius: 16px; display: flex; overflow: hidden; box-shadow: 0 10px 20px rgba(255, 69, 0, 0.05); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+            
+            <!-- Left Ticket Part -->
+            <div style="background: linear-gradient(135deg, #FF4500 0%, #FF8C00 100%); color: white; padding: 2rem; display: flex; flex-direction: column; justify-content: center; align-items: center; min-width: 200px; text-align: center;">
+                <span style="font-size: 0.95rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">ลดทันที</span>
+                <h3 style="font-size: 2.2rem; font-weight: 800; margin: 0.5rem 0;">฿{{ number_format($coupon->discount_amount, 0) }}</h3>
+                <span style="font-size: 0.8rem; opacity: 0.9;">
+                    @if($coupon->product)
+                        เฉพาะสินค้าที่ร่วมรายการ
+                    @else
+                        ไม่มีขั้นต่ำ
+                    @endif
+                </span>
+            </div>
+
+            <!-- Right Info Part -->
+            <div style="padding: 1.5rem 2rem; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                    <h4 style="font-size: 1.25rem; color: var(--color-navy-dark); font-weight: 700; margin: 0 0 0.5rem;">
+                        {{ $coupon->name }}
+                    </h4>
+                    <p style="color: var(--color-grey); font-size: 0.9rem; margin: 0;">
+                        @if($coupon->product)
+                            <span style="color: #FF4500; font-weight: 600;">⚠️ คูปองนี้ใช้ได้เฉพาะกับ: {{ $coupon->product->name }}</span>
+                        @else
+                            <span>ใช้ได้กับสินค้าทุกชิ้นในร้าน ดีดี.ไอที.คอม</span>
+                        @endif
+                    </p>
+                </div>
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 1rem; border-top: 1px solid var(--color-silver-light); padding-top: 1rem;">
+                    <div>
+                        <p style="margin: 0; font-size: 0.8rem; color: var(--color-grey);">รหัสโค้ดส่วนลด:</p>
+                        <strong style="font-size: 1.2rem; color: #FF4500; font-family: monospace; letter-spacing: 1px;">{{ $coupon->code }}</strong>
+                    </div>
+                    
+                    <div style="display: flex; gap: 15px; align-items: center;">
+                        <span class="countdown-timer" data-expires="{{ $coupon->expires_at }}" style="font-size: 0.85rem; color: var(--color-danger); font-weight: 600; background: rgba(229, 62, 62, 0.1); padding: 4px 10px; border-radius: 20px;">
+                            ⌛ โค้ดหมดอายุใน: --:--:--
+                        </span>
+
+                        @if($isCollected)
+                            <button disabled style="background: var(--color-grey-light); color: white; border: none; padding: 8px 20px; border-radius: 20px; font-weight: 600; font-size: 0.85rem; cursor: not-allowed;">
+                                เก็บโค้ดแล้ว
+                            </button>
+                        @else
+                            <button onclick="collectCoupon(this, '{{ $coupon->id }}')" 
+                                    style="background: #FF4500; color: white; border: none; padding: 8px 20px; border-radius: 20px; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: background 0.2s;"
+                                    onmouseover="this.style.background='#D03400'"
+                                    onmouseout="this.style.background='#FF4500'">
+                                เก็บโค้ดส่วนลด
+                            </button>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+        @empty
+        <div style="background: white; border: 1px solid var(--color-silver); border-radius: 12px; padding: 4rem 2rem; text-align: center; color: var(--color-grey);">
+            <span style="font-size: 3rem;">🎟️</span>
+            <h3 style="margin-top: 1rem; font-size: 1.2rem; font-weight: 600;">ขณะนี้ยังไม่มีโปรโมชันคูปองส่วนลดพิเศษ</h3>
+            <p style="font-size: 0.9rem; margin-top: 5px;">โปรดติดตามข่าวสารและโปรโมชันพิเศษจากทางร้านใหม่ในเร็วๆ นี้</p>
+        </div>
+        @endforelse
+    </div>
+
+    <!-- Discounted Products Section -->
+    <div style="margin-top: 4rem; margin-bottom: 2rem;">
+        <div style="border-bottom: 2px solid var(--color-silver); padding-bottom: 1rem; margin-bottom: 2rem; display: flex; align-items: center; justify-content: space-between;">
+            <h3 style="font-size: 1.6rem; color: var(--color-navy-dark); font-weight: 800; margin: 0; font-family: 'Prompt', sans-serif; display: flex; align-items: center; gap: 8px;">
+                🔥 สินค้าลดราคาพิเศษในช่วงนี้
+            </h3>
+            <a href="{{ route('products.index', ['on_sale' => 1]) }}" style="font-size: 0.95rem; color: var(--color-navy); text-decoration: none; font-weight: 700; display: flex; align-items: center; gap: 4px;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">
+                ดูทั้งหมด <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px;">
+            @forelse($discountedProducts as $product)
+            @php
+                $primaryImage = $product->images->where('is_primary', true)->first() ?? $product->images->first();
+                $imagePath = $primaryImage ? asset('storage/' . $primaryImage->image_path) : 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=300&auto=format&fit=crop';
+                $discountAmount = $product->price - $product->discount_price;
+                $discountPercent = round(($discountAmount / $product->price) * 100);
+            @endphp
+            <div style="background: white; border: 1px solid var(--color-silver-light); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.02); display: flex; flex-direction: column; transition: all 0.2s;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 12px 24px rgba(0,0,0,0.06)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.02)'">
+                <!-- Image Wrapper -->
+                <div style="position: relative; padding-top: 100%; background: #f8fafc;">
+                    <img src="{{ $imagePath }}" alt="{{ $product->name }}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; padding: 10px;">
+                    
+                    <!-- Discount Badge -->
+                    <span style="position: absolute; top: 12px; left: 12px; background: #ef4444; color: white; padding: 4px 10px; border-radius: 99px; font-weight: 700; font-size: 0.8rem; box-shadow: 0 2px 5px rgba(239, 68, 68, 0.3);">
+                        ลด {{ $discountPercent }}%
+                    </span>
+                </div>
+
+                <!-- Product Details -->
+                <div style="padding: 1.25rem; display: flex; flex-grow: 1; flex-direction: column; justify-content: space-between; gap: 10px;">
+                    <div>
+                        <span style="font-size: 0.75rem; text-transform: uppercase; color: #94a3b8; font-weight: 700; letter-spacing: 0.5px;">{{ $product->brand->name ?? 'แบรนด์' }}</span>
+                        <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--color-navy-dark); margin: 3px 0 8px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 2.8em;">
+                            {{ $product->name }}
+                        </h4>
+                    </div>
+
+                    <div>
+                        <!-- Price display -->
+                        <div style="display: flex; align-items: baseline; gap: 6px; margin-bottom: 8px;">
+                            <span style="font-size: 1.2rem; font-weight: 800; color: #ef4444;">฿{{ number_format($product->discount_price, 0) }}</span>
+                            <span style="font-size: 0.85rem; text-decoration: line-through; color: #94a3b8;">฿{{ number_format($product->price, 0) }}</span>
+                        </div>
+
+                        <div style="display: flex; gap: 8px;">
+                            <a href="{{ route('products.show', $product->id) }}" style="flex: 1; text-align: center; text-decoration: none; padding: 8px; background: #1B2A47; color: white; font-size: 0.8rem; font-weight: 700; border-radius: 8px; transition: background 0.2s;" onmouseover="this.style.background='#2c3e5d'" onmouseout="this.style.background='#1B2A47'">
+                                ดูรายละเอียด
+                            </a>
+                            <form action="{{ route('cart.add', $product->id) }}" method="POST" style="margin: 0;">
+                                @csrf
+                                <button type="submit" style="padding: 8px 10px; background: #ef4444; color: white; border: none; border-radius: 8px; font-size: 0.9rem; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#dc2626'" onmouseout="this.style.background='#ef4444'" title="เพิ่มลงตะกร้า">
+                                    🛒
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @empty
+            <div style="grid-column: 1 / -1; background: white; border: 1px solid var(--color-silver); border-radius: 12px; padding: 3rem 2rem; text-align: center; color: var(--color-grey);">
+                <p style="font-size: 0.95rem; margin: 0;">ขณะนี้ยังไม่มีรายการสินค้าลดราคาพิเศษแยกเฉพาะ</p>
+            </div>
+            @endforelse
+        </div>
+    </div>
+</div>
+
+<script>
+    // AJAX collect coupon function
+    function collectCoupon(btn, couponId) {
+        if (!{{ auth()->check() ? 'true' : 'false' }}) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'กรุณาเข้าสู่ระบบ',
+                text: 'ต้องเข้าสู่ระบบก่อนจึงจะเก็บคูปองส่วนลดได้',
+                confirmButtonText: 'เข้าสู่ระบบ',
+                showCancelButton: true,
+                cancelButtonText: 'ยกเลิก',
+                confirmButtonColor: '#1B2A47'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "{{ route('login') }}";
+                }
+            });
+            return;
+        }
+
+        btn.disabled = true;
+        btn.innerText = 'กำลังประมวลผล...';
+
+        fetch(`/promotions/collect/${couponId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                btn.style.background = 'var(--color-grey-light)';
+                btn.style.cursor = 'not-allowed';
+                btn.innerText = 'เก็บโค้ดแล้ว';
+                btn.removeAttribute('onclick');
+                
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true
+                });
+                Toast.fire({
+                    icon: 'success',
+                    title: data.message
+                });
+            } else {
+                btn.disabled = false;
+                btn.innerText = 'เก็บโค้ดส่วนลด';
+                Swal.fire({
+                    icon: 'info',
+                    title: 'คำชี้แจง',
+                    text: data.message,
+                    confirmButtonColor: '#1B2A47'
+                });
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            btn.disabled = false;
+            btn.innerText = 'เก็บโค้ดส่วนลด';
+            Swal.fire({
+                icon: 'error',
+                title: 'เกิดข้อผิดพลาด',
+                text: 'ไม่สามารถติดต่อเซิร์ฟเวอร์ได้ กรุณาลองใหม่อีกครั้ง',
+                confirmButtonColor: '#1B2A47'
+            });
+        });
+    }
+
+    // Countdown Timer Logic
+    document.addEventListener('DOMContentLoaded', function() {
+        const timers = document.querySelectorAll('.countdown-timer');
+        
+        function updateTimers() {
+            const now = new Date().getTime();
+            
+            timers.forEach(timer => {
+                const expiresString = timer.getAttribute('data-expires');
+                const expiryTime = new Date(expiresString.replace(/-/g, "/")).getTime();
+                const distance = expiryTime - now;
+                
+                if (distance < 0) {
+                    timer.innerHTML = "⌛ โค้ดหมดอายุแล้ว";
+                    timer.style.color = "#a0aec0";
+                    timer.style.background = "#edf2f7";
+                } else {
+                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                    
+                    let countdownText = "⌛ เหลือเวลา: ";
+                    if (days > 0) {
+                        countdownText += days + " วัน ";
+                    }
+                    countdownText += hours.toString().padStart(2, '0') + ":" + 
+                                     minutes.toString().padStart(2, '0') + ":" + 
+                                     seconds.toString().padStart(2, '0');
+                                     
+                    timer.innerHTML = countdownText;
+                }
+            });
+        }
+        
+        updateTimers();
+        setInterval(updateTimers, 1000);
+    });
+</script>
+@endsection

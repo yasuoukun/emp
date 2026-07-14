@@ -1,0 +1,319 @@
+/* Theme Colors: Shopee Orange, Lazada Pink, Indigo, Cyan, Emerald, Gold */
+:root {
+    --color-navy: #0F172A;
+    --color-navy-dark: #020617;
+    --color-navy-light: #1E293B;
+    --color-grey: #334155;
+    --color-grey-light: #94A3B8;
+    --color-grey-bg: #F8FAFC;
+    --color-silver: #E2E8F0;
+    --color-silver-light: #F1F5F9;
+    --color-white: #FFFFFF;
+    
+    /* Vibrant Accents */
+    --color-shopee: #EE4D2D;
+    --color-shopee-orange: #FF5722;
+    --color-lazada-pink: #FF007F;
+    --color-cyan: #06B6D4;
+    --color-indigo: #6366F1;
+    --color-purple: #8B5CF6;
+    --color-gold: #F59E0B;
+    --color-emerald: #10B981;
+    
+    --color-accent: var(--color-shopee);
+    --color-danger: #EF4444;
+    --color-success: #10B981;
+}
+
+/* Vibrant Gradient Classes */
+.bg-gradient-shopee { background: linear-gradient(135deg, #FF8A00 0%, #FF5200 100%); }
+.bg-gradient-lazada { background: linear-gradient(135deg, #F000FF 0%, #00EAFF 100%); }
+.bg-gradient-premium { background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%); }
+.bg-gradient-sunset { background: linear-gradient(135deg, #FF512F 0%, #DD2476 100%); }
+.bg-gradient-ocean { background: linear-gradient(135deg, #06B6D4 0%, #3B82F6 100%); }
+.bg-gradient-success-glow { background: linear-gradient(135deg, #10B981 0%, #059669 100%); }
+.bg-gradient-gold-glow { background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); }
+.bg-gradient-dark-glass { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+.bg-gradient-light-glass { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+
+
+body {
+    font-family: 'Inter', 'Prompt', sans-serif;
+    background-color: var(--color-grey-bg);
+    color: var(--color-grey);
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+
+/* Navbar */
+.navbar {
+    background-color: var(--color-navy);
+    color: var(--color-white);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-white);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.navbar-links {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.navbar-links a {
+    color: var(--color-silver);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.navbar-links a:hover {
+    color: var(--color-white);
+}
+
+/* Navbar Dropdown styling */
+.navbar-item-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.navbar-dropdown-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+}
+
+.navbar-dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--color-navy-dark);
+    min-width: 240px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    border-radius: 12px;
+    padding: 0.6rem 0;
+    z-index: 1050;
+    border: 1px solid rgba(255,255,255,0.08);
+    margin-top: 8px;
+}
+
+/* Invisible hover bridge to prevent menu from closing when crossing the margin gap */
+.navbar-dropdown-menu::after {
+    content: '';
+    position: absolute;
+    top: -12px;
+    left: 0;
+    right: 0;
+    height: 12px;
+    background: transparent;
+    z-index: 10;
+}
+
+.navbar-dropdown-menu::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    width: 12px;
+    height: 12px;
+    background-color: var(--color-navy-dark);
+    border-left: 1px solid rgba(255,255,255,0.08);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    z-index: 1; /* Make sure the arrow renders on top of the bridge */
+}
+
+.navbar-dropdown-menu a {
+    color: rgba(226, 232, 240, 0.9) !important;
+    padding: 10px 20px;
+    text-decoration: none;
+    display: flex !important;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border-radius: 6px;
+    margin: 2px 8px;
+}
+
+.navbar-dropdown-menu a:hover {
+    background-color: var(--color-accent) !important;
+    color: white !important;
+    transform: translateX(4px);
+}
+
+.navbar-item-dropdown:hover .navbar-dropdown-menu {
+    display: block;
+}
+
+/* Top Bar */
+.topbar {
+    background-color: var(--color-navy-dark);
+    color: var(--color-silver-light);
+    font-size: 0.875rem;
+    padding: 0.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    z-index: 1010;
+}
+
+.topbar a {
+    color: var(--color-silver-light);
+    text-decoration: none;
+    margin-left: 1rem;
+}
+
+/* Footer */
+.footer {
+    background-color: var(--color-navy-dark);
+    color: var(--color-silver);
+    padding: 3rem 2rem;
+    margin-top: 4rem;
+}
+
+/* Layout Containers */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 1rem;
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .navbar-links {
+        margin-top: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .topbar {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+}
+
+/* Animations & Transitions */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+    100% { transform: translateY(0px); }
+}
+
+@keyframes pulse-glow {
+    0% { box-shadow: 0 0 0 0 rgba(49, 130, 206, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(49, 130, 206, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(49, 130, 206, 0); }
+}
+
+.fade-in {
+    animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-float {
+    animation: float 4s ease-in-out infinite;
+}
+
+.pulse-glow {
+    animation: pulse-glow 2s infinite;
+}
+
+.hover-scale {
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hover-scale:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 20px 35px rgba(27, 42, 71, 0.12) !important;
+}
+
+/* Premium Card Layouts */
+.premium-card {
+    background: var(--color-white);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(27, 42, 71, 0.03);
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.premium-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 35px rgba(27, 42, 71, 0.08);
+}
+
+/* Scrollbar Customization */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--color-silver-light);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--color-grey-light);
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-grey);
+}
+
+/* Responsive Navbar & Spacing Enhancements to Prevent Crowding */
+@media (max-width: 1250px) {
+    .navbar {
+        padding: 1rem 1.5rem;
+    }
+    .navbar-links {
+        gap: 0.9rem;
+        font-size: 0.9rem;
+    }
+}
+@media (max-width: 1024px) {
+    .navbar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        padding: 1rem;
+    }
+    .navbar-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.8rem;
+    }
+}
+
+

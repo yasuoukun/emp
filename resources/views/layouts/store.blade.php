@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DDIT | จำหน่ายโทรศัพท์มือถือและสินค้าไอทีทุกประเภท ครบวงจร</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <link rel="stylesheet" href="{{ asset('css/theme.css') }}">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <style>[x-cloak] { display: none !important; }</style>
+</head>
+<body class="antialiased" data-logged-in="{{ auth()->check() ? 'true' : 'false' }}">
+
+    <!-- Top Bar -->
+    <div class="topbar">
+        <div class="topbar-left">
+            <a href="#"><i class="fa-brands fa-facebook"></i> Facebook</a>
+            <a href="#"><i class="fa-brands fa-line"></i> Line</a>
+        </div>
+        <div class="topbar-right" x-data="{ openProfile: false }">
+            @auth
+                <div style="position: relative; display: inline-block;">
+                    <button @click="openProfile = !openProfile" @click.away="openProfile = false" style="background: none; border: none; color: white; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 5px; font-family: 'Prompt', sans-serif;">
+                        👤 {{ auth()->user()->name }} <span style="font-size: 0.75rem;">▼</span>
+                    </button>
+                    <div x-show="openProfile" x-transition style="display: none; position: absolute; right: 0; top: 100%; margin-top: 8px; background: white; border: 1px solid var(--color-silver); border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); z-index: 1000; min-width: 180px; text-align: left; padding: 0.5rem 0;">
+                        <a href="{{ route('dashboard') }}" style="display: block; padding: 10px 15px; color: var(--color-navy-dark); text-decoration: none; font-weight: 500; font-size: 0.9rem;" onmouseover="this.style.background='var(--color-grey-bg)'" onmouseout="this.style.background='transparent'">
+                            💻 แดชบอร์ด/โปรไฟล์
+                        </a>
+                        <hr style="border: 0; border-top: 1px solid var(--color-silver); margin: 0.25rem 0;">
+                        <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
+                            @csrf
+                            <button type="submit" style="width: 100%; text-align: left; background: none; border: none; padding: 10px 15px; color: var(--color-danger); cursor: pointer; font-weight: 600; font-size: 0.9rem; font-family: 'Prompt', sans-serif;" onmouseover="this.style.background='rgba(239, 68, 68, 0.08)'" onmouseout="this.style.background='transparent'">
+                                🚪 ออกจากระบบ
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            @else
+                <a href="{{ route('login') }}">เข้าสู่ระบบ</a>
+                <a href="{{ route('register') }}">สมัครสมาชิก</a>
+            @endauth
+            @auth
+                @if(auth()->user()->role === 'customer')
+                <a href="javascript:void(0)" onclick="window.dispatchEvent(new CustomEvent('open-customer-chat'))" title="แชทติดต่อสอบถามกับร้านค้า" style="margin-left: 1.25rem; position: relative; display: inline-flex; align-items: center; color: white;">
+                    <i class="fa-solid fa-comment-dots" style="font-size: 1.15rem;"></i>
+                    <span class="customer-nav-chat-badge" style="display: none; position: absolute; top: -7px; right: -8px; background: #ef4444; color: white; border-radius: 50%; padding: 1px 5px; font-size: 0.65rem; font-weight: bold; min-width: 14px; text-align: center; line-height: 1.2;"></span>
+                </a>
+                @endif
+            @endauth
+            <!-- Notification Bell -->
+            <div x-data="{ openNotification: false }" style="position: relative; display: inline-block; margin-left: 1.25rem;">
+                <button @click="openNotification = !openNotification" @click.away="openNotification = false" title="การแจ้งเตือน" style="background: none; border: none; color: white; cursor: pointer; display: flex; align-items: center; position: relative;">
+                    <i class="fa-solid fa-bell" style="font-size: 1.1rem;"></i>
+                    @auth
+                        @if(auth()->user()->unreadNotifications->count() > 0)
+                            <span style="position: absolute; top: -6px; right: -8px; background: #ef4444; color: white; border-radius: 50%; padding: 1px 5px; font-size: 0.65rem; font-weight: bold; min-width: 14px; text-align: center; line-height: 1.2;">
+                                {{ auth()->user()->unreadNotifications->count() }}
+                            </span>
+                        @endif
+                    @endauth
+                </button>
+                @auth
+                    <div x-show="openNotification" x-transition style="display: none; position: absolute; right: 0; top: 100%; margin-top: 15px; background: white; border: 1px solid var(--color-silver); border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); z-index: 1000; width: 320px; text-align: left; padding: 0; overflow: hidden;">
+                        <div style="padding: 12px 15px; background: var(--color-grey-bg); border-bottom: 1px solid var(--color-silver); display: flex; justify-content: space-between; align-items: center;">
+                            <h4 style="margin: 0; font-size: 0.95rem; font-weight: 700; color: var(--color-navy-dark);">การแจ้งเตือน</h4>
+                            @if(auth()->user()->unreadNotifications->count() > 0)
+                                <form action="{{ route('notifications.markAllAsRead') }}" method="POST" style="margin: 0;">
+                                    @csrf
+                                    <button type="submit" style="background: none; border: none; color: var(--color-accent); font-size: 0.75rem; cursor: pointer; font-weight: 600;">อ่านทั้งหมด</button>
+                                </form>
+                            @endif
+                        </div>
+                        <div style="max-height: 300px; overflow-y: auto;">
+                            @forelse(auth()->user()->notifications()->take(10)->get() as $notification)
+                                <a href="{{ $notification->data['url'] ?? '#' }}" style="display: block; padding: 12px 15px; text-decoration: none; border-bottom: 1px solid rgba(226, 232, 240, 0.5); {{ $notification->read_at ? 'background: white;' : 'background: #f0fdfa;' }} transition: background 0.2s;" onmouseover="this.style.background='var(--color-grey-bg)'" onmouseout="this.style.background='{{ $notification->read_at ? 'white' : '#f0fdfa' }}'">
+                                    <div style="display: flex; gap: 10px;">
+                                        @if(isset($notification->data['image']) && $notification->data['image'])
+                                            <img src="{{ Storage::url($notification->data['image']) }}" alt="" style="width: 40px; height: 40px; border-radius: 8px; object-fit: cover; flex-shrink: 0;">
+                                        @else
+                                            <div style="width: 40px; height: 40px; border-radius: 8px; background: var(--color-accent); color: white; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1.2rem;">
+                                                <i class="fa-solid fa-bullhorn"></i>
+                                            </div>
+                                        @endif
+                                        <div>
+                                            <h5 style="margin: 0 0 4px; font-size: 0.85rem; font-weight: 700; color: var(--color-navy-dark); line-height: 1.3;">{{ $notification->data['title'] ?? 'การแจ้งเตือน' }}</h5>
+                                            <p style="margin: 0 0 6px; font-size: 0.75rem; color: #64748b; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ $notification->data['message'] ?? '' }}</p>
+                                            <span style="font-size: 0.65rem; color: #94a3b8;">{{ $notification->created_at->diffForHumans() }}</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            @empty
+                                <div style="padding: 20px; text-align: center; color: #94a3b8; font-size: 0.85rem;">
+                                    ไม่มีการแจ้งเตือน
+                                </div>
+                            @endforelse
+                        </div>
+                    </div>
+                @endauth
+            </div>
+            <a href="{{ route('dashboard', ['tab' => 'wishlist']) }}" title="สินค้าที่ชอบ" style="margin-left: 1.25rem;"><i class="fa-solid fa-heart" style="color: #ef4444; font-size: 1.1rem;"></i></a>
+            <a href="{{ route('cart.index') }}" id="cart-badge-link" title="ตะกร้าสินค้า" style="margin-left: 1.25rem; display: inline-flex; align-items: center; gap: 6px;">
+                <i class="fa-solid fa-basket-shopping" style="font-size: 1.1rem;"></i>
+                <span id="cart-count" style="background: #ef4444; color: white; border-radius: 50%; padding: 1px 6px; font-size: 0.75rem; font-weight: bold; min-width: 18px; text-align: center; display: inline-block; line-height: 1.4;">{{ count(session('cart', [])) }}</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="{{ url('/') }}" class="navbar-brand">
+            ดีดี.ไอที.คอม
+        </a>
+        <!-- Search Bar -->
+        <form action="{{ route('products.index') }}" method="GET" style="margin: 0; display: flex; align-items: center; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 6px 14px; width: 280px; max-width: 100%;">
+            <input type="text" name="q" value="{{ request('q') }}" placeholder="ค้นหา iPad, Mac, iPhone..." style="background: none; border: none; outline: none; color: white; width: 100%; font-family: 'Prompt', sans-serif; font-size: 0.85rem;">
+            <button type="submit" style="background: none; border: none; color: rgba(255,255,255,0.7); cursor: pointer; padding: 2px 0 2px 8px;">
+                <i class="fa-solid fa-magnifying-glass" style="font-size: 0.9rem;"></i>
+            </button>
+        </form>
+        <div class="navbar-links">
+            <a href="{{ url('/') }}">หน้าแรก</a>
+            <a href="{{ route('about') }}">เกี่ยวกับเรา</a>
+            <a href="{{ route('products.index') }}">สินค้าทั้งหมด</a>
+            <a href="{{ route('promotions.index') }}">โปรโมชันพิเศษ</a>
+            
+            <!-- Services Dropdown -->
+            <div class="navbar-item-dropdown">
+                <a href="#" class="navbar-dropdown-trigger" onclick="event.preventDefault()">
+                    บริการ & โซลูชัน <span style="font-size: 0.7rem;">▼</span>
+                </a>
+                <div class="navbar-dropdown-menu">
+                    <a href="{{ route('services') }}">🛠️ บริการทั้งหมดของเรา</a>
+                    <a href="{{ route('installment') }}">💳 บริการผ่อนชำระ</a>
+                    <a href="{{ route('trade_in') }}">🔄 เทรดอินเครื่องเก่า</a>
+                    <a href="{{ route('education') }}">🎓 โซลูชันเพื่อการศึกษา</a>
+                    <a href="{{ route('business') }}">🏢 โซลูชันสำหรับธุรกิจองค์กร</a>
+                </div>
+            </div>
+            
+            <!-- Service Center Dropdown -->
+            <div class="navbar-item-dropdown">
+                <a href="#" class="navbar-dropdown-trigger" onclick="event.preventDefault()">
+                    ศูนย์ซ่อม & ติดตาม <span style="font-size: 0.7rem;">▼</span>
+                </a>
+                <div class="navbar-dropdown-menu">
+                    <a href="{{ route('service_center') }}">🔧 ส่งซ่อม/เคลมออนไลน์</a>
+                    <a href="{{ route('tracking') }}">📦 ติดตามสถานะงาน</a>
+                    <a href="{{ route('help_center') }}">❓ ศูนย์ช่วยเหลือ & FAQ</a>
+                </div>
+            </div>
+
+            <a href="{{ route('categoryblog') }}">ข่าวสารและกิจกรรม</a>
+            <a href="{{ route('quotation.generate') }}">📄 ขอใบเสนอราคา</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        @yield('content')
+    </main>
+
+    <!-- Floating LINE OA Button -->
+    <a href="https://line.me/ti/p/@dditcom" target="_blank" style="position: fixed; bottom: 25px; left: 25px; z-index: 9999; display: flex; align-items: center; justify-content: center; width: 60px; height: 60px; background-color: #06c755; color: white; border-radius: 50%; box-shadow: 0 4px 15px rgba(6,199,85,0.4); text-decoration: none; transition: all 0.3s ease;" onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 6px 20px rgba(6,199,85,0.6)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 15px rgba(6,199,85,0.4)'" title="แอดไลน์สอบถามข้อมูล">
+        <i class="fa-brands fa-line" style="font-size: 2.2rem;"></i>
+    </a>
+
+    <!-- Footer -->
+    <footer class="footer" style="border-top: 1px solid rgba(255,255,255,0.05);">
+        <div class="container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2.5rem;">
+            <div>
+                <h3 style="font-weight: 700; font-size: 1.3rem; color: white; margin-bottom: 1rem;">บริษัท ดีดี.ไอที.คอม จำกัด</h3>
+                <p style="color: rgba(160, 174, 192, 0.9); line-height: 1.7; font-size: 0.9rem;">ผู้เชี่ยวชาญทางด้านสินค้าโทรศัพท์มือถือและสินค้าไอทีแบบครบวงจร</p>
+                <p style="color: rgba(160, 174, 192, 0.7); font-size: 0.85rem; margin-top: 0.75rem;">📍 72/47-48ก ถนนชัยประสิทธิ์ ต.ในเมือง<br>อ.เมือง จ.ชัยภูมิ 36000</p>
+            </div>
+            <div>
+                <h3 style="font-weight: 700; font-size: 1rem; color: white; margin-bottom: 1rem;">ช่องทางติดต่อ</h3>
+                <p style="color: rgba(160, 174, 192, 0.9); font-size: 0.9rem; margin-bottom: 0.5rem;">📞 083-828-941</p>
+                <p style="color: rgba(160, 174, 192, 0.9); font-size: 0.9rem; margin-bottom: 0.5rem;">✉️ ddit.com.88@gmail.com</p>
+                <p style="color: rgba(160, 174, 192, 0.7); font-size: 0.85rem; margin-top: 0.5rem;">⏰ ทำการทุกวัน: 09:00 - 19:00 น.</p>
+                <div style="display: flex; gap: 12px; margin-top: 1rem;">
+                    <a href="https://www.facebook.com/dditcom" target="_blank" style="width: 36px; height: 36px; background: rgba(255,255,255,0.08); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--color-silver); transition: all 0.2s; text-decoration: none;" onmouseover="this.style.background='#1877f2'; this.style.color='white'" onmouseout="this.style.background='rgba(255,255,255,0.08)'; this.style.color='var(--color-silver)'"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="https://line.me/ti/p/@dditcom" target="_blank" style="width: 36px; height: 36px; background: rgba(255,255,255,0.08); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--color-silver); transition: all 0.2s; text-decoration: none;" onmouseover="this.style.background='#06c755'; this.style.color='white'" onmouseout="this.style.background='rgba(255,255,255,0.08)'; this.style.color='var(--color-silver)'"><i class="fa-brands fa-line"></i></a>
+                </div>
+            </div>
+            <div>
+                <h3 style="font-weight: 700; font-size: 1rem; color: white; margin-bottom: 1rem;">บริการพิเศษ</h3>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <a href="{{ route('installment') }}" style="color: rgba(160, 174, 192, 0.9); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(160, 174, 192, 0.9)'">คำนวณยอดผ่อนชำระ</a>
+                    <a href="{{ route('trade_in') }}" style="color: rgba(160, 174, 192, 0.9); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(160, 174, 192, 0.9)'">เทรดอินตีราคาเครื่อง</a>
+                    <a href="{{ route('education') }}" style="color: rgba(160, 174, 192, 0.9); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(160, 174, 192, 0.9)'">โซลูชันเพื่อการศึกษา</a>
+                    <a href="{{ route('business') }}" style="color: rgba(160, 174, 192, 0.9); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(160, 174, 192, 0.9)'">โซลูชันสำหรับธุรกิจองค์กร</a>
+                </div>
+            </div>
+            <div>
+                <h3 style="font-weight: 700; font-size: 1rem; color: white; margin-bottom: 1rem;">ช่วยเหลือ & ตรวจสอบ</h3>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <a href="{{ route('service_center') }}" style="color: rgba(160, 174, 192, 0.9); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(160, 174, 192, 0.9)'">ศูนย์บริการซ่อม/เคลม</a>
+                    <a href="{{ route('tracking') }}" style="color: rgba(160, 174, 192, 0.9); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(160, 174, 192, 0.9)'">ติดตามสถานะการส่งซ่อม</a>
+                    <a href="{{ route('help_center') }}" style="color: rgba(160, 174, 192, 0.9); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(160, 174, 192, 0.9)'">ศูนย์ช่วยเหลือ & FAQ</a>
+                </div>
+            </div>
+        </div>
+        <div style="border-top: 1px solid rgba(255,255,255,0.06); margin-top: 2rem; padding-top: 1.5rem; text-align: center; color: rgba(160, 174, 192, 0.5); font-size: 0.8rem;">
+            © {{ date('Y') }} บริษัท ดีดี.ไอที.คอม จำกัด — All rights reserved.
+        </div>
+    </footer>
+
+    <x-chat-widget />
+
+    @if (session('sweet_success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'สำเร็จ!',
+                text: '{{ session('sweet_success') }}',
+                confirmButtonColor: '#1B2A47'
+            });
+        </script>
+    @endif
+    
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'ผิดพลาด',
+                text: '{{ session('error') }}',
+                confirmButtonColor: '#1B2A47'
+            });
+        </script>
+    @endif
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Ajax add to cart
+            document.body.addEventListener('submit', function(e) {
+                if (e.target && e.target.classList.contains('ajax-add-to-cart-form')) {
+                    e.preventDefault();
+                    const form = e.target;
+                    const actionUrl = form.action;
+                    const formData = new FormData(form);
+
+                    fetch(actionUrl, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const cartCountSpan = document.getElementById('cart-count');
+                            if (cartCountSpan) {
+                                cartCountSpan.textContent = data.cart_count;
+                            }
+                            const Toast = Swal.mixin({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 2500,
+                                timerProgressBar: true
+                            });
+                            Toast.fire({
+                                icon: 'success',
+                                title: data.message || 'เพิ่มสินค้าลงตะกร้าเรียบร้อยแล้ว!'
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'เกิดข้อผิดพลาด',
+                                text: data.message || 'ไม่สามารถเพิ่มสินค้าลงตะกร้าได้'
+                            });
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        form.submit();
+                    });
+                }
+            });
+
+            // AJAX Wishlist Toggle (heart buttons)
+            document.body.addEventListener('click', function(e) {
+                const btn = e.target.closest('.wishlist-toggle-btn');
+                if (!btn) return;
+                e.preventDefault();
+
+                const productId = btn.dataset.productId;
+                const isLoggedIn = document.body.dataset.loggedIn === 'true';
+
+                if (!isLoggedIn) {
+                    window.location.href = '{{ route("login") }}';
+                    return;
+                }
+
+                fetch('/wishlist/toggle/' + productId, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        const icon = btn.querySelector('i');
+                        if (data.added) {
+                            icon.classList.remove('fa-regular');
+                            icon.classList.add('fa-solid');
+                            btn.style.color = '#ef4444';
+                        } else {
+                            icon.classList.remove('fa-solid');
+                            icon.classList.add('fa-regular');
+                            btn.style.color = '#94a3b8';
+                        }
+                    }
+                })
+                .catch(err => console.error(err));
+            });
+        });
+    </script>
+
+</body>
+</html>

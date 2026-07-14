@@ -1,0 +1,119 @@
+/* Theme Colors: Navy, Grey, Silver */
+:root {
+    --color-navy: #1B2A47;
+    --color-navy-dark: #121C30;
+    --color-navy-light: #2A3B5C;
+    --color-grey: #4A5568;
+    --color-grey-light: #A0AEC0;
+    --color-grey-bg: #F7FAFC;
+    --color-silver: #E2E8F0;
+    --color-silver-light: #EDF2F7;
+    --color-white: #FFFFFF;
+    --color-accent: #3182CE;
+    --color-danger: #E53E3E;
+    --color-success: #38A169;
+}
+
+body {
+    font-family: 'Inter', 'Prompt', sans-serif;
+    background-color: var(--color-grey-bg);
+    color: var(--color-grey);
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+
+/* Navbar */
+.navbar {
+    background-color: var(--color-navy);
+    color: var(--color-white);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-white);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.navbar-links {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.navbar-links a {
+    color: var(--color-silver);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.navbar-links a:hover {
+    color: var(--color-white);
+}
+
+/* Top Bar */
+.topbar {
+    background-color: var(--color-navy-dark);
+    color: var(--color-silver-light);
+    font-size: 0.875rem;
+    padding: 0.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.topbar a {
+    color: var(--color-silver-light);
+    text-decoration: none;
+    margin-left: 1rem;
+}
+
+/* Footer */
+.footer {
+    background-color: var(--color-navy-dark);
+    color: var(--color-silver);
+    padding: 3rem 2rem;
+    margin-top: 4rem;
+}
+
+/* Layout Containers */
+.container {
+    max-w: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 1rem;
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .navbar-links {
+        margin-top: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .topbar {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+}
