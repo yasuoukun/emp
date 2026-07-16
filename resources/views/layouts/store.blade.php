@@ -174,11 +174,10 @@
     </nav>
 
     <!-- Mobile Drawer Backdrop Overlay -->
-    <div class="mobile-drawer-overlay" onclick="toggleMobileMenu()" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); z-index: 9999;"></div>
+    <div class="mobile-drawer-overlay" onclick="toggleMobileMenu()"></div>
 
     <!-- Mobile Navigation Drawer -->
-    <div class="mobile-drawer"
-         style="position: fixed; top: 0; right: 0; bottom: 0; width: 280px; max-width: 85%; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); z-index: 10000; overflow-y: auto; padding: 1.5rem 1.25rem; display: none; flex-direction: column; gap: 1.25rem; border-left: 1px solid rgba(255, 255, 255, 0.1); box-shadow: -10px 0 30px rgba(0, 0, 0, 0.25);">
+    <div class="mobile-drawer">
          
          <!-- Drawer Header -->
          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.5rem;">
@@ -420,13 +419,11 @@
             const drawer = document.querySelector('.mobile-drawer');
             const overlay = document.querySelector('.mobile-drawer-overlay');
             if (drawer && overlay) {
-                if (drawer.style.display === 'none' || drawer.style.display === '') {
-                    drawer.style.display = 'flex';
-                    overlay.style.display = 'block';
+                drawer.classList.toggle('open');
+                overlay.classList.toggle('open');
+                if (drawer.classList.contains('open')) {
                     document.body.style.overflow = 'hidden';
                 } else {
-                    drawer.style.display = 'none';
-                    overlay.style.display = 'none';
                     document.body.style.overflow = '';
                 }
             }
