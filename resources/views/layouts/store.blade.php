@@ -167,28 +167,20 @@
                 <i class="fa-solid fa-basket-shopping" style="font-size: 1.25rem;"></i>
                 <span class="cart-count-badge" style="position: absolute; top: -8px; right: -8px; background: #ef4444; color: white; border-radius: 50%; padding: 1px 5px; font-size: 0.65rem; font-weight: bold; min-width: 14px; text-align: center; line-height: 1.2;">{{ count(session('cart', [])) }}</span>
             </a>
-            <button @click="mobileMenuOpen = true" style="background: none; border: none; color: white; font-size: 1.3rem; cursor: pointer; display: flex; align-items: center; padding: 5px;">
+            <button type="button" onclick="toggleMobileMenu()" style="background: none; border: none; color: white; font-size: 1.35rem; cursor: pointer; display: flex; align-items: center; padding: 5px;">
                 <i class="fa-solid fa-bars"></i>
             </button>
         </div>
     </nav>
 
     <!-- Mobile Navigation Drawer -->
-    <div x-show="mobileMenuOpen" 
-         x-cloak
-         x-transition:enter="transition ease-out duration-300"
-         x-transition:enter-start="opacity-0 translate-x-full"
-         x-transition:enter-end="opacity-100 translate-x-0"
-         x-transition:leave="transition ease-in duration-200"
-         x-transition:leave-start="opacity-100 translate-x-0"
-         x-transition:leave-end="opacity-0 translate-x-full"
-         class="mobile-drawer"
-         style="position: fixed; inset: 0; background: var(--color-navy); z-index: 10000; overflow-y: auto; padding: 2rem 1.5rem; display: flex; flex-direction: column; gap: 2rem;">
+    <div class="mobile-drawer"
+         style="position: fixed; inset: 0; background: var(--color-navy); z-index: 10000; overflow-y: auto; padding: 2rem 1.5rem; display: none; flex-direction: column; gap: 2rem;">
          
          <!-- Drawer Header -->
          <div style="display: flex; justify-content: space-between; align-items: center;">
              <span style="font-size: 1.4rem; font-weight: 700; color: white;">ดีดี.ไอที.คอม</span>
-             <button @click="mobileMenuOpen = false" style="background: none; border: none; color: white; font-size: 1.8rem; cursor: pointer;">
+             <button type="button" onclick="toggleMobileMenu()" style="background: none; border: none; color: white; font-size: 1.8rem; cursor: pointer;">
                  <i class="fa-solid fa-xmark"></i>
              </button>
          </div>
@@ -208,13 +200,10 @@
              <a href="{{ route('products.index') }}" style="color: white; text-decoration: none; font-size: 1.1rem; font-weight: 500; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-box" style="width: 24px; color: var(--color-silver);"></i> สินค้าทั้งหมด</a>
              <a href="{{ route('promotions.index') }}" style="color: white; text-decoration: none; font-size: 1.1rem; font-weight: 500; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-tags" style="width: 24px; color: var(--color-silver);"></i> โปรโมชันพิเศษ</a>
 
-             <!-- Mobile Collapsible: Services -->
-             <div x-data="{ open: false }" style="display: flex; flex-direction: column; gap: 0.5rem;">
-                 <button @click="open = !open" style="background: none; border: none; color: white; text-align: left; width: 100%; font-size: 1.1rem; font-weight: 500; display: flex; justify-content: space-between; align-items: center; padding: 0; cursor: pointer; font-family: 'Prompt', sans-serif;">
-                     <span style="display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-handshake-angle" style="width: 24px; color: var(--color-silver);"></i> บริการ & โซลูชัน</span>
-                     <span x-text="open ? '▲' : '▼'" style="font-size: 0.75rem;"></span>
-                 </button>
-                 <div x-show="open" x-transition style="display: flex; flex-direction: column; gap: 0.75rem; padding-left: 2rem; margin-top: 0.25rem;">
+             <!-- Services (Expanded) -->
+             <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                 <div style="color: white; font-size: 1.1rem; font-weight: 600; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-handshake-angle" style="width: 24px; color: var(--color-silver);"></i> บริการ & โซลูชัน</div>
+                 <div style="display: flex; flex-direction: column; gap: 0.75rem; padding-left: 2rem; margin-top: 0.25rem;">
                      <a href="{{ route('services') }}" style="color: var(--color-silver); text-decoration: none; font-size: 0.95rem;">🛠️ บริการทั้งหมดของเรา</a>
                      <a href="{{ route('installment') }}" style="color: var(--color-silver); text-decoration: none; font-size: 0.95rem;">💳 บริการผ่อนชำระ</a>
                      <a href="{{ route('trade_in') }}" style="color: var(--color-silver); text-decoration: none; font-size: 0.95rem;">🔄 เทรดอินเครื่องเก่า</a>
@@ -223,13 +212,10 @@
                  </div>
              </div>
 
-             <!-- Mobile Collapsible: Service Center -->
-             <div x-data="{ open: false }" style="display: flex; flex-direction: column; gap: 0.5rem;">
-                 <button @click="open = !open" style="background: none; border: none; color: white; text-align: left; width: 100%; font-size: 1.1rem; font-weight: 500; display: flex; justify-content: space-between; align-items: center; padding: 0; cursor: pointer; font-family: 'Prompt', sans-serif;">
-                     <span style="display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-screwdriver-wrench" style="width: 24px; color: var(--color-silver);"></i> ศูนย์ซ่อม & ติดตาม</span>
-                     <span x-text="open ? '▲' : '▼'" style="font-size: 0.75rem;"></span>
-                 </button>
-                 <div x-show="open" x-transition style="display: flex; flex-direction: column; gap: 0.75rem; padding-left: 2rem; margin-top: 0.25rem;">
+             <!-- Service Center (Expanded) -->
+             <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                 <div style="color: white; font-size: 1.1rem; font-weight: 600; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-screwdriver-wrench" style="width: 24px; color: var(--color-silver);"></i> ศูนย์ซ่อม & ติดตาม</div>
+                 <div style="display: flex; flex-direction: column; gap: 0.75rem; padding-left: 2rem; margin-top: 0.25rem;">
                      <a href="{{ route('service_center') }}" style="color: var(--color-silver); text-decoration: none; font-size: 0.95rem;">🔧 ส่งซ่อม/เคลมออนไลน์</a>
                      <a href="{{ route('tracking') }}" style="color: var(--color-silver); text-decoration: none; font-size: 0.95rem;">📦 ติดตามสถานะงาน</a>
                      <a href="{{ route('help_center') }}" style="color: var(--color-silver); text-decoration: none; font-size: 0.95rem;">❓ ศูนย์ช่วยเหลือ & FAQ</a>
@@ -425,6 +411,20 @@
                 .catch(err => console.error(err));
             });
         });
+    </script>
+    <script>
+        function toggleMobileMenu() {
+            const drawer = document.querySelector('.mobile-drawer');
+            if (drawer) {
+                if (drawer.style.display === 'none' || drawer.style.display === '') {
+                    drawer.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    drawer.style.display = 'none';
+                    document.body.style.overflow = '';
+                }
+            }
+        }
     </script>
 </div>
 </body>
