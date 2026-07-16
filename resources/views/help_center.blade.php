@@ -10,7 +10,7 @@
     </div>
 
     <!-- Tabs Navigation -->
-    <div style="display: flex; border-bottom: 2px solid var(--color-silver); margin-bottom: 2rem; justify-content: center; gap: 10px;">
+    <div class="mobile-tabs-scroll" style="display: flex; border-bottom: 2px solid var(--color-silver); margin-bottom: 2rem; justify-content: center; gap: 10px;">
         <button type="button" @click="activeTab = 'order'; openIndex = null" style="padding: 12px 20px; font-weight: 600; font-size: 1rem; border: none; background: none; cursor: pointer; transition: all 0.2s; font-family: inherit;" :style="activeTab === 'order' ? 'color: var(--color-navy); border-bottom: 3px solid var(--color-navy); margin-bottom: -2px;' : 'color: var(--color-grey);'">🛒 การสั่งซื้อ</button>
         <button type="button" @click="activeTab = 'shipping'; openIndex = null" style="padding: 12px 20px; font-weight: 600; font-size: 1rem; border: none; background: none; cursor: pointer; transition: all 0.2s; font-family: inherit;" :style="activeTab === 'shipping' ? 'color: var(--color-navy); border-bottom: 3px solid var(--color-navy); margin-bottom: -2px;' : 'color: var(--color-grey);'">🚚 การจัดส่ง</button>
         <button type="button" @click="activeTab = 'returns'; openIndex = null" style="padding: 12px 20px; font-weight: 600; font-size: 1rem; border: none; background: none; cursor: pointer; transition: all 0.2s; font-family: inherit;" :style="activeTab === 'returns' ? 'color: var(--color-navy); border-bottom: 3px solid var(--color-navy); margin-bottom: -2px;' : 'color: var(--color-grey);'">↩️ คืนสินค้า</button>

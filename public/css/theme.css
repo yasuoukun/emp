@@ -659,3 +659,33 @@ body {
 .mobile-drawer button {
     width: 100% !important;
 }
+
+/* General responsive grid collapsing for inline grid-template-columns with fractional columns */
+@media (max-width: 768px) {
+    div[style*="grid-template-columns: 1fr 1fr"],
+    div[style*="grid-template-columns: 1.2fr 0.8fr"],
+    div[style*="grid-template-columns: 1fr 1.2fr"] {
+        grid-template-columns: 1fr !important;
+        gap: 1.5rem !important;
+    }
+}
+
+/* Horizontal scrollable tab buttons on mobile */
+@media (max-width: 768px) {
+    .mobile-tabs-scroll {
+        justify-content: flex-start !important;
+        overflow-x: auto !important;
+        white-space: nowrap !important;
+        padding-bottom: 8px !important;
+        -webkit-overflow-scrolling: touch !important;
+        scrollbar-width: none !important; /* Hide standard scrollbar */
+    }
+    .mobile-tabs-scroll::-webkit-scrollbar {
+        display: none !important;
+    }
+    .mobile-tabs-scroll button {
+        flex-shrink: 0 !important;
+        font-size: 0.85rem !important;
+        padding: 8px 14px !important;
+    }
+}

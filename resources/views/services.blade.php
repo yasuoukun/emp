@@ -19,7 +19,7 @@
     <h2 style="font-size: 2.2rem; font-weight: 700; color: var(--color-navy-dark); text-align: center; margin-bottom: 3rem;">
         บริการโซลูชัน IT ระดับองค์กร
     </h2>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; margin-bottom: 5rem;">
+    <div class="shopee-mobile-row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; margin-bottom: 5rem;">
         
         <!-- Service 1 -->
         <div class="premium-card" style="padding: 2.2rem; background: white;">
@@ -83,7 +83,7 @@
             ขั้นตอนการบริการโซลูชัน IT แบบครบวงจร (Our Service Flow)
         </h2>
         
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 2rem;">
+        <div class="shopee-mobile-row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 2rem;">
             
             <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.08);">
                 <div style="font-size: 0.85rem; color: var(--color-accent); font-weight: 700; margin-bottom: 8px;">STEP 01</div>
@@ -166,7 +166,7 @@
             ศูนย์ซ่อมบำรุงและบริการไอที (Maintenance & Repair Services)
         </h2>
         
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 3.5rem;">
+        <div class="shopee-mobile-row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 3.5rem;">
             
             <div style="display: flex; gap: 15px; align-items: flex-start;">
                 <span style="color: var(--color-accent); font-size: 1.5rem;"><i class="fa-solid fa-desktop"></i></span>
@@ -249,7 +249,7 @@
     </div>
 
     <!-- Trade-In & Leasing Info Block -->
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 5rem;">
+    <div class="shopee-mobile-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 5rem;">
         
         <!-- Trade-in -->
         <div style="background: white; border: 1px solid var(--color-silver); border-radius: 20px; padding: 3rem 2.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.01);">

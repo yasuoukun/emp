@@ -32,7 +32,7 @@
     </div>
 
     <!-- Cycle Details Grid -->
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 4rem;">
+    <div class="shopee-mobile-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 4rem;">
         
         <!-- Step 1 -->
         <div style="background: white; border-radius: 20px; border: 1px solid var(--color-silver); padding: 2.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.01);">

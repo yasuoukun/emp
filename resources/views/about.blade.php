@@ -46,7 +46,7 @@
             สิ่งที่ทำให้เราแตกต่าง
         </h2>
         
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+        <div class="shopee-mobile-row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
             
             <div style="text-align: center; padding: 1rem;">
                 <div style="width: 70px; height: 70px; background: rgba(49, 130, 206, 0.1); color: var(--color-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem auto; font-size: 2rem;">

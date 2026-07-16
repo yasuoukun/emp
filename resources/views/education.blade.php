@@ -44,7 +44,7 @@
         </p>
 
         <!-- iPad Features Grid -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+        <div class="shopee-mobile-row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
             <div style="background: var(--color-grey-bg); border-radius: 16px; padding: 1.8rem; border: 1px solid var(--color-silver-light);">
                 <h3 style="color: var(--color-navy-dark); font-weight: 700; margin-top: 0; display: flex; align-items: center; gap: 10px;">
                     <i class="fa-solid fa-bolt" style="color: #D69E2E;"></i> ประสิทธิภาพอันทรงพลัง
@@ -122,7 +122,7 @@
         </p>
 
         <!-- Mac Features Grid -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+        <div class="shopee-mobile-row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
             <div style="background: var(--color-grey-bg); border-radius: 16px; padding: 1.8rem; border: 1px solid var(--color-silver-light);">
                 <h3 style="color: var(--color-navy-dark); font-weight: 700; margin-top: 0; display: flex; align-items: center; gap: 10px;">
                     <i class="fa-solid fa-wand-magic-sparkles" style="color: #DD6B20;"></i> เครื่องมือสร้างสรรค์อันทรงพลัง
