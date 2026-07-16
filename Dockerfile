@@ -1,5 +1,9 @@
 FROM richarvey/nginx-php-fpm:latest
 
+# Install PostgreSQL client headers and PHP extension
+RUN apk add --no-cache postgresql-dev && \
+    docker-php-ext-install pdo_pgsql
+
 # Copy application files
 COPY . /var/www/html
 
