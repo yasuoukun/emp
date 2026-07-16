@@ -1,4 +1,4 @@
-FROM richarvey/play-with-docker:latest
+FROM richarvey/nginx-php-fpm:latest
 
 # Copy application files
 COPY . /var/www/html
