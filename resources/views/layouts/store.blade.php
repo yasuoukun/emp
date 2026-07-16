@@ -14,7 +14,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>[x-cloak] { display: none !important; }</style>
 </head>
-<body class="antialiased" data-logged-in="{{ auth()->check() ? 'true' : 'false' }}">
+<body class="antialiased" data-logged-in="{{ auth()->check() ? 'true' : 'false' }}" x-data="{ mobileMenuOpen: false }">
 
     <!-- Top Bar -->
     <div class="topbar">
@@ -106,7 +106,7 @@
             <a href="{{ route('dashboard', ['tab' => 'wishlist']) }}" title="สินค้าที่ชอบ" style="margin-left: 1.25rem;"><i class="fa-solid fa-heart" style="color: #ef4444; font-size: 1.1rem;"></i></a>
             <a href="{{ route('cart.index') }}" id="cart-badge-link" title="ตะกร้าสินค้า" style="margin-left: 1.25rem; display: inline-flex; align-items: center; gap: 6px;">
                 <i class="fa-solid fa-basket-shopping" style="font-size: 1.1rem;"></i>
-                <span id="cart-count" style="background: #ef4444; color: white; border-radius: 50%; padding: 1px 6px; font-size: 0.75rem; font-weight: bold; min-width: 18px; text-align: center; display: inline-block; line-height: 1.4;">{{ count(session('cart', [])) }}</span>
+                <span id="cart-count" class="cart-count-badge" style="background: #ef4444; color: white; border-radius: 50%; padding: 1px 6px; font-size: 0.75rem; font-weight: bold; min-width: 18px; text-align: center; display: inline-block; line-height: 1.4;">{{ count(session('cart', [])) }}</span>
             </a>
         </div>
     </div>
@@ -158,7 +158,105 @@
             <a href="{{ route('categoryblog') }}">ข่าวสารและกิจกรรม</a>
             <a href="{{ route('quotation.generate') }}">📄 ขอใบเสนอราคา</a>
         </div>
+        
+        <!-- Mobile Actions -->
+        <div class="mobile-actions">
+            <a href="{{ route('cart.index') }}" title="ตะกร้าสินค้า" style="color: white; text-decoration: none; position: relative; display: flex; align-items: center; margin-right: 5px;">
+                <i class="fa-solid fa-basket-shopping" style="font-size: 1.25rem;"></i>
+                <span class="cart-count-badge" style="position: absolute; top: -8px; right: -8px; background: #ef4444; color: white; border-radius: 50%; padding: 1px 5px; font-size: 0.65rem; font-weight: bold; min-width: 14px; text-align: center; line-height: 1.2;">{{ count(session('cart', [])) }}</span>
+            </a>
+            <button @click="mobileMenuOpen = true" style="background: none; border: none; color: white; font-size: 1.3rem; cursor: pointer; display: flex; align-items: center; padding: 5px;">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
     </nav>
+
+    <!-- Mobile Navigation Drawer -->
+    <div x-show="mobileMenuOpen" 
+         x-cloak
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 translate-x-full"
+         x-transition:enter-end="opacity-100 translate-x-0"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100 translate-x-0"
+         x-transition:leave-end="opacity-0 translate-x-full"
+         class="mobile-drawer"
+         style="position: fixed; inset: 0; background: var(--color-navy); z-index: 10000; overflow-y: auto; padding: 2rem 1.5rem; display: flex; flex-direction: column; gap: 2rem;">
+         
+         <!-- Drawer Header -->
+         <div style="display: flex; justify-content: space-between; align-items: center;">
+             <span style="font-size: 1.4rem; font-weight: 700; color: white;">ดีดี.ไอที.คอม</span>
+             <button @click="mobileMenuOpen = false" style="background: none; border: none; color: white; font-size: 1.8rem; cursor: pointer;">
+                 <i class="fa-solid fa-xmark"></i>
+             </button>
+         </div>
+
+         <!-- Mobile Search Bar -->
+         <form action="{{ route('products.index') }}" method="GET" style="margin: 0; display: flex; align-items: center; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 12px 16px;">
+             <input type="text" name="q" value="{{ request('q') }}" placeholder="ค้นหา iPad, Mac, iPhone..." style="background: none; border: none; outline: none; color: white; width: 100%; font-family: 'Prompt', sans-serif; font-size: 0.9rem;">
+             <button type="submit" style="background: none; border: none; color: rgba(255,255,255,0.7); cursor: pointer;">
+                 <i class="fa-solid fa-magnifying-glass" style="font-size: 1rem;"></i>
+             </button>
+         </form>
+
+         <!-- Mobile Menu Links -->
+         <div style="display: flex; flex-direction: column; gap: 1.25rem; font-family: 'Prompt', sans-serif;">
+             <a href="{{ url('/') }}" style="color: white; text-decoration: none; font-size: 1.1rem; font-weight: 500; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-house" style="width: 24px; color: var(--color-silver);"></i> หน้าแรก</a>
+             <a href="{{ route('about') }}" style="color: white; text-decoration: none; font-size: 1.1rem; font-weight: 500; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-circle-info" style="width: 24px; color: var(--color-silver);"></i> เกี่ยวกับเรา</a>
+             <a href="{{ route('products.index') }}" style="color: white; text-decoration: none; font-size: 1.1rem; font-weight: 500; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-box" style="width: 24px; color: var(--color-silver);"></i> สินค้าทั้งหมด</a>
+             <a href="{{ route('promotions.index') }}" style="color: white; text-decoration: none; font-size: 1.1rem; font-weight: 500; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-tags" style="width: 24px; color: var(--color-silver);"></i> โปรโมชันพิเศษ</a>
+
+             <!-- Mobile Collapsible: Services -->
+             <div x-data="{ open: false }" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                 <button @click="open = !open" style="background: none; border: none; color: white; text-align: left; width: 100%; font-size: 1.1rem; font-weight: 500; display: flex; justify-content: space-between; align-items: center; padding: 0; cursor: pointer; font-family: 'Prompt', sans-serif;">
+                     <span style="display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-handshake-angle" style="width: 24px; color: var(--color-silver);"></i> บริการ & โซลูชัน</span>
+                     <span x-text="open ? '▲' : '▼'" style="font-size: 0.75rem;"></span>
+                 </button>
+                 <div x-show="open" x-transition style="display: flex; flex-direction: column; gap: 0.75rem; padding-left: 2rem; margin-top: 0.25rem;">
+                     <a href="{{ route('services') }}" style="color: var(--color-silver); text-decoration: none; font-size: 0.95rem;">🛠️ บริการทั้งหมดของเรา</a>
+                     <a href="{{ route('installment') }}" style="color: var(--color-silver); text-decoration: none; font-size: 0.95rem;">💳 บริการผ่อนชำระ</a>
+                     <a href="{{ route('trade_in') }}" style="color: var(--color-silver); text-decoration: none; font-size: 0.95rem;">🔄 เทรดอินเครื่องเก่า</a>
+                     <a href="{{ route('education') }}" style="color: var(--color-silver); text-decoration: none; font-size: 0.95rem;">🎓 โซลูชันเพื่อการศึกษา</a>
+                     <a href="{{ route('business') }}" style="color: var(--color-silver); text-decoration: none; font-size: 0.95rem;">🏢 โซลูชันสำหรับธุรกิจองค์กร</a>
+                 </div>
+             </div>
+
+             <!-- Mobile Collapsible: Service Center -->
+             <div x-data="{ open: false }" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                 <button @click="open = !open" style="background: none; border: none; color: white; text-align: left; width: 100%; font-size: 1.1rem; font-weight: 500; display: flex; justify-content: space-between; align-items: center; padding: 0; cursor: pointer; font-family: 'Prompt', sans-serif;">
+                     <span style="display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-screwdriver-wrench" style="width: 24px; color: var(--color-silver);"></i> ศูนย์ซ่อม & ติดตาม</span>
+                     <span x-text="open ? '▲' : '▼'" style="font-size: 0.75rem;"></span>
+                 </button>
+                 <div x-show="open" x-transition style="display: flex; flex-direction: column; gap: 0.75rem; padding-left: 2rem; margin-top: 0.25rem;">
+                     <a href="{{ route('service_center') }}" style="color: var(--color-silver); text-decoration: none; font-size: 0.95rem;">🔧 ส่งซ่อม/เคลมออนไลน์</a>
+                     <a href="{{ route('tracking') }}" style="color: var(--color-silver); text-decoration: none; font-size: 0.95rem;">📦 ติดตามสถานะงาน</a>
+                     <a href="{{ route('help_center') }}" style="color: var(--color-silver); text-decoration: none; font-size: 0.95rem;">❓ ศูนย์ช่วยเหลือ & FAQ</a>
+                 </div>
+             </div>
+
+             <a href="{{ route('categoryblog') }}" style="color: white; text-decoration: none; font-size: 1.1rem; font-weight: 500; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-newspaper" style="width: 24px; color: var(--color-silver);"></i> ข่าวสารและกิจกรรม</a>
+             <a href="{{ route('quotation.generate') }}" style="color: white; text-decoration: none; font-size: 1.1rem; font-weight: 500; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-file-invoice" style="width: 24px; color: var(--color-silver);"></i> ขอใบเสนอราคา</a>
+         </div>
+
+         <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 0.5rem 0;">
+
+         <!-- Mobile Auth/Profile -->
+         <div style="display: flex; flex-direction: column; gap: 1rem; font-family: 'Prompt', sans-serif;">
+             @auth
+                 <div style="color: white; font-weight: 600; font-size: 1.05rem;">👤 {{ auth()->user()->name }}</div>
+                 <a href="{{ route('dashboard') }}" style="color: white; text-decoration: none; background: rgba(255,255,255,0.1); padding: 12px; border-radius: 10px; text-align: center; font-weight: 600; font-size: 0.95rem; border: 1px solid rgba(255,255,255,0.15);">💻 แดชบอร์ด/โปรไฟล์</a>
+                 <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
+                     @csrf
+                     <button type="submit" style="width: 100%; background: var(--color-danger); color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer; font-family: 'Prompt', sans-serif; font-size: 0.95rem;">🚪 ออกจากระบบ</button>
+                 </form>
+             @else
+                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                     <a href="{{ route('login') }}" style="color: white; text-decoration: none; background: rgba(255,255,255,0.1); padding: 12px; border-radius: 10px; text-align: center; font-weight: 600; font-size: 0.95rem; border: 1px solid rgba(255,255,255,0.15);">เข้าสู่ระบบ</a>
+                     <a href="{{ route('register') }}" style="color: white; text-decoration: none; background: var(--color-accent); padding: 12px; border-radius: 10px; text-align: center; font-weight: 600; font-size: 0.95rem;">สมัครสมาชิก</a>
+                 </div>
+             @endauth
+         </div>
+    </div>
 
     <!-- Main Content -->
     <main>
@@ -256,10 +354,9 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            const cartCountSpan = document.getElementById('cart-count');
-                            if (cartCountSpan) {
-                                cartCountSpan.textContent = data.cart_count;
-                            }
+                            document.querySelectorAll('.cart-count-badge').forEach(el => {
+                                el.textContent = data.cart_count;
+                            });
                             const Toast = Swal.mixin({
                                 toast: true,
                                 position: 'top-end',

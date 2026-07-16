@@ -5,7 +5,7 @@
     <!-- Hero/Promotion Banner Slider -->
     @if($banners->isEmpty())
         <!-- Default Hero (No Banners) -->
-        <div style="background: linear-gradient(135deg, #0F172A 0%, #1E293B 30%, #1B2A47 60%, #2A3E5C 100%); color: white; border-radius: 24px; padding: 4.5rem 2.5rem; text-align: center; margin-bottom: 4rem; box-shadow: 0 25px 50px rgba(15, 23, 42, 0.25); position: relative; overflow: hidden;">
+        <div class="hero-banner">
             <div style="position: absolute; top: -50%; left: -20%; width: 60%; height: 200%; background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, transparent 70%); pointer-events: none;"></div>
             <div style="position: absolute; bottom: -50%; right: -20%; width: 60%; height: 200%; background: radial-gradient(circle, rgba(49, 130, 206, 0.06) 0%, transparent 70%); pointer-events: none;"></div>
             <div style="position: relative; z-index: 1;">
@@ -14,10 +14,10 @@
                     {{ $settings['slogan_badge'] }}
                 </span>
                 @endif
-                <h1 style="font-size: 3rem; font-weight: 800; margin-bottom: 1.25rem; letter-spacing: -0.03em; text-shadow: 0 4px 15px rgba(0,0,0,0.2); background: linear-gradient(135deg, #fff 0%, #c7d2fe 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.2;">
+                <h1 class="hero-banner-title">
                     {{ $settings['slogan_title'] }}
                 </h1>
-                <p style="font-size: 1.15rem; color: rgba(203, 213, 225, 0.9); margin-bottom: 2.5rem; max-width: 550px; margin-left: auto; margin-right: auto; line-height: 1.7; white-space: pre-line;">{!! e($settings['slogan_description']) !!}</p>
+                <p class="hero-banner-desc">{!! e($settings['slogan_description']) !!}</p>
                 
                 <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 10px;">
                     <a href="{{ route('products.index') }}" style="text-decoration: none;">
@@ -64,7 +64,7 @@
             </div>
 
             <!-- Overlay Slogans with Glassmorphism -->
-            <div style="position: absolute; bottom: 20px; left: 20px; right: 20px; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(8px); padding: 1.5rem 2rem; border-radius: 18px; border: 1px solid rgba(255,255,255,0.15); color: white; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div class="slider-overlay">
                 <div style="text-align: left; max-width: 70%;">
                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 0.25rem;">
                         <h2 style="font-size: 1.4rem; font-weight: 800; margin: 0; background: linear-gradient(135deg, #fff 0%, #c7d2fe 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
