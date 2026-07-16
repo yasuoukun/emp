@@ -1,0 +1,10 @@
+# nixpacks.toml
+
+[phases.build]
+cmds = [
+    "composer install --no-dev --optimize-autoloader",
+    "npm ci && npm run build"
+]
+
+[start]
+cmd = "php artisan serve --host=0.0.0.0 --port=8000"

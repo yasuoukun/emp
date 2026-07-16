@@ -17,15 +17,27 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Disable foreign keys and truncate
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        User::truncate();
-        Category::truncate();
-        Brand::truncate();
-        Product::truncate();
-        ProductImage::truncate();
-        \App\Models\Coupon::truncate();
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        // Disable foreign keys and truncate based on database driver
+        $driver = DB::getDriverName();
+        if ($driver === 'pgsql') {
+            DB::statement('TRUNCATE users, categories, brands, products, product_images, coupons CASCADE;');
+        } elseif ($driver === 'mysql') {
+            DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+            User::truncate();
+            Category::truncate();
+            Brand::truncate();
+            Product::truncate();
+            ProductImage::truncate();
+            \App\Models\Coupon::truncate();
+            DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        } else {
+            User::truncate();
+            Category::truncate();
+            Brand::truncate();
+            Product::truncate();
+            ProductImage::truncate();
+            \App\Models\Coupon::truncate();
+        }
 
         // 1. Seed Users
         User::create([

@@ -1,0 +1,8 @@
+.git
+.github
+.env
+/node_modules
+/vendor
+/public/build
+*.log
+.phpunit.result.cache
