@@ -14,7 +14,8 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>[x-cloak] { display: none !important; }</style>
 </head>
-<body class="antialiased" data-logged-in="{{ auth()->check() ? 'true' : 'false' }}" x-data="{ mobileMenuOpen: false }">
+<body class="antialiased" data-logged-in="{{ auth()->check() ? 'true' : 'false' }}">
+    <div x-data="{ mobileMenuOpen: false }">
 
     <!-- Top Bar -->
     <div class="topbar">
@@ -424,6 +425,6 @@
             });
         });
     </script>
-
+</div>
 </body>
 </html>
