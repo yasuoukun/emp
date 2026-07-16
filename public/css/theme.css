@@ -368,8 +368,15 @@ body {
     display: none;
 }
 
+.mobile-drawer-overlay {
+    display: none;
+}
+
 @media (min-width: 1201px) {
     .mobile-drawer {
+        display: none !important;
+    }
+    .mobile-drawer-overlay {
         display: none !important;
     }
 }

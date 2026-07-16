@@ -163,84 +163,87 @@
         
         <!-- Mobile Actions -->
         <div class="mobile-actions">
-            <a href="{{ route('cart.index') }}" title="ตะกร้าสินค้า" style="color: white; text-decoration: none; position: relative; display: flex; align-items: center; margin-right: 5px;">
-                <i class="fa-solid fa-basket-shopping" style="font-size: 1.25rem;"></i>
-                <span class="cart-count-badge" style="position: absolute; top: -8px; right: -8px; background: #ef4444; color: white; border-radius: 50%; padding: 1px 5px; font-size: 0.65rem; font-weight: bold; min-width: 14px; text-align: center; line-height: 1.2;">{{ count(session('cart', [])) }}</span>
+            <a href="{{ route('cart.index') }}" title="ตะกร้าสินค้า" style="color: white; text-decoration: none; position: relative; display: flex; align-items: center; margin-right: 8px;">
+                <i class="fa-solid fa-basket-shopping" style="font-size: 1.15rem;"></i>
+                <span class="cart-count-badge" style="position: absolute; top: -8px; right: -8px; background: #ef4444; color: white; border-radius: 50%; padding: 1px 5px; font-size: 0.6rem; font-weight: bold; min-width: 13px; text-align: center; line-height: 1.2;">{{ count(session('cart', [])) }}</span>
             </a>
-            <button type="button" onclick="toggleMobileMenu()" style="background: none; border: none; color: white; font-size: 1.35rem; cursor: pointer; display: flex; align-items: center; padding: 5px;">
+            <button type="button" onclick="toggleMobileMenu()" style="background: none; border: none; color: white; font-size: 1.15rem; cursor: pointer; display: flex; align-items: center; padding: 4px;">
                 <i class="fa-solid fa-bars"></i>
             </button>
         </div>
     </nav>
 
+    <!-- Mobile Drawer Backdrop Overlay -->
+    <div class="mobile-drawer-overlay" onclick="toggleMobileMenu()" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); z-index: 9999;"></div>
+
     <!-- Mobile Navigation Drawer -->
     <div class="mobile-drawer"
-         style="position: fixed; inset: 0; background: var(--color-navy); z-index: 10000; overflow-y: auto; padding: 2rem 1.5rem; display: none; flex-direction: column; gap: 2rem;">
+         style="position: fixed; top: 0; right: 0; bottom: 0; width: 280px; max-width: 85%; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); z-index: 10000; overflow-y: auto; padding: 1.5rem 1.25rem; display: none; flex-direction: column; gap: 1.25rem; border-left: 1px solid rgba(255, 255, 255, 0.1); box-shadow: -10px 0 30px rgba(0, 0, 0, 0.25);">
          
          <!-- Drawer Header -->
-         <div style="display: flex; justify-content: space-between; align-items: center;">
-             <span style="font-size: 1.4rem; font-weight: 700; color: white;">ดีดี.ไอที.คอม</span>
-             <button type="button" onclick="toggleMobileMenu()" style="background: none; border: none; color: white; font-size: 1.8rem; cursor: pointer;">
+         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.5rem;">
+             <span style="font-size: 1.15rem; font-weight: 700; color: white; font-family: 'Prompt', sans-serif;">ดีดี.ไอที.คอม</span>
+             <button type="button" onclick="toggleMobileMenu()" style="background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; display: flex; align-items: center; padding: 2px;">
                  <i class="fa-solid fa-xmark"></i>
              </button>
          </div>
 
-         <!-- Mobile Search Bar -->
-         <form action="{{ route('products.index') }}" method="GET" style="margin: 0; display: flex; align-items: center; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 12px 16px;">
-             <input type="text" name="q" value="{{ request('q') }}" placeholder="ค้นหา iPad, Mac, iPhone..." style="background: none; border: none; outline: none; color: white; width: 100%; font-family: 'Prompt', sans-serif; font-size: 0.9rem;">
-             <button type="submit" style="background: none; border: none; color: rgba(255,255,255,0.7); cursor: pointer;">
-                 <i class="fa-solid fa-magnifying-glass" style="font-size: 1rem;"></i>
+         <!-- Mobile Search Bar (Compact) -->
+         <form action="{{ route('products.index') }}" method="GET" style="margin: 0; display: flex; align-items: center; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 8px 12px;">
+             <input type="text" name="q" value="{{ request('q') }}" placeholder="ค้นหาสินค้า..." style="background: none; border: none; outline: none; color: white; width: 100%; font-family: 'Prompt', sans-serif; font-size: 0.8rem;">
+             <button type="submit" style="background: none; border: none; color: rgba(255,255,255,0.6); cursor: pointer; display: flex; align-items: center; padding: 0;">
+                 <i class="fa-solid fa-magnifying-glass" style="font-size: 0.85rem;"></i>
              </button>
          </form>
 
-         <!-- Mobile Menu Links -->
-         <div style="display: flex; flex-direction: column; gap: 1.25rem; font-family: 'Prompt', sans-serif;">
-             <a href="{{ url('/') }}" style="color: white; text-decoration: none; font-size: 1.1rem; font-weight: 500; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-house" style="width: 24px; color: var(--color-silver);"></i> หน้าแรก</a>
-             <a href="{{ route('about') }}" style="color: white; text-decoration: none; font-size: 1.1rem; font-weight: 500; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-circle-info" style="width: 24px; color: var(--color-silver);"></i> เกี่ยวกับเรา</a>
-             <a href="{{ route('products.index') }}" style="color: white; text-decoration: none; font-size: 1.1rem; font-weight: 500; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-box" style="width: 24px; color: var(--color-silver);"></i> สินค้าทั้งหมด</a>
-             <a href="{{ route('promotions.index') }}" style="color: white; text-decoration: none; font-size: 1.1rem; font-weight: 500; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-tags" style="width: 24px; color: var(--color-silver);"></i> โปรโมชันพิเศษ</a>
+         <!-- Mobile Menu Links (Compact) -->
+         <div style="display: flex; flex-direction: column; gap: 0.9rem; font-family: 'Prompt', sans-serif;">
+             <a href="{{ url('/') }}" style="color: white; text-decoration: none; font-size: 0.9rem; font-weight: 500; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-house" style="width: 20px; color: var(--color-silver-light); font-size: 0.85rem;"></i> หน้าแรก</a>
+             <a href="{{ route('about') }}" style="color: white; text-decoration: none; font-size: 0.9rem; font-weight: 500; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-circle-info" style="width: 20px; color: var(--color-silver-light); font-size: 0.85rem;"></i> เกี่ยวกับเรา</a>
+             <a href="{{ route('products.index') }}" style="color: white; text-decoration: none; font-size: 0.9rem; font-weight: 500; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-box" style="width: 20px; color: var(--color-silver-light); font-size: 0.85rem;"></i> สินค้าทั้งหมด</a>
+             <a href="{{ route('promotions.index') }}" style="color: white; text-decoration: none; font-size: 0.9rem; font-weight: 500; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-tags" style="width: 20px; color: var(--color-silver-light); font-size: 0.85rem;"></i> โปรโมชันพิเศษ</a>
 
-             <!-- Services (Expanded) -->
-             <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                 <div style="color: white; font-size: 1.1rem; font-weight: 600; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-handshake-angle" style="width: 24px; color: var(--color-silver);"></i> บริการ & โซลูชัน</div>
-                 <div style="display: flex; flex-direction: column; gap: 0.75rem; padding-left: 2rem; margin-top: 0.25rem;">
-                     <a href="{{ route('services') }}" style="color: var(--color-silver); text-decoration: none; font-size: 0.95rem;">🛠️ บริการทั้งหมดของเรา</a>
-                     <a href="{{ route('installment') }}" style="color: var(--color-silver); text-decoration: none; font-size: 0.95rem;">💳 บริการผ่อนชำระ</a>
-                     <a href="{{ route('trade_in') }}" style="color: var(--color-silver); text-decoration: none; font-size: 0.95rem;">🔄 เทรดอินเครื่องเก่า</a>
-                     <a href="{{ route('education') }}" style="color: var(--color-silver); text-decoration: none; font-size: 0.95rem;">🎓 โซลูชันเพื่อการศึกษา</a>
-                     <a href="{{ route('business') }}" style="color: var(--color-silver); text-decoration: none; font-size: 0.95rem;">🏢 โซลูชันสำหรับธุรกิจองค์กร</a>
+             <!-- Services -->
+             <div style="display: flex; flex-direction: column; gap: 0.35rem;">
+                 <div style="color: white; font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; gap: 10px; opacity: 0.95;"><i class="fa-solid fa-handshake-angle" style="width: 20px; color: var(--color-silver-light); font-size: 0.85rem;"></i> บริการ & โซลูชัน</div>
+                 <div style="display: flex; flex-direction: column; gap: 0.5rem; padding-left: 1.25rem; border-left: 1.5px solid rgba(255,255,255,0.08); margin-left: 9px; margin-top: 0.15rem;">
+                     <a href="{{ route('services') }}" style="color: var(--color-silver); text-decoration: none; font-size: 0.8rem;">🛠️ บริการทั้งหมดของเรา</a>
+                     <a href="{{ route('installment') }}" style="color: var(--color-silver); text-decoration: none; font-size: 0.8rem;">💳 บริการผ่อนชำระ</a>
+                     <a href="{{ route('trade_in') }}" style="color: var(--color-silver); text-decoration: none; font-size: 0.8rem;">🔄 เทรดอินเครื่องเก่า</a>
+                     <a href="{{ route('education') }}" style="color: var(--color-silver); text-decoration: none; font-size: 0.8rem;">🎓 โซลูชันเพื่อการศึกษา</a>
+                     <a href="{{ route('business') }}" style="color: var(--color-silver); text-decoration: none; font-size: 0.8rem;">🏢 โซลูชันสำหรับธุรกิจองค์กร</a>
                  </div>
              </div>
 
-             <!-- Service Center (Expanded) -->
-             <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                 <div style="color: white; font-size: 1.1rem; font-weight: 600; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-screwdriver-wrench" style="width: 24px; color: var(--color-silver);"></i> ศูนย์ซ่อม & ติดตาม</div>
-                 <div style="display: flex; flex-direction: column; gap: 0.75rem; padding-left: 2rem; margin-top: 0.25rem;">
-                     <a href="{{ route('service_center') }}" style="color: var(--color-silver); text-decoration: none; font-size: 0.95rem;">🔧 ส่งซ่อม/เคลมออนไลน์</a>
-                     <a href="{{ route('tracking') }}" style="color: var(--color-silver); text-decoration: none; font-size: 0.95rem;">📦 ติดตามสถานะงาน</a>
-                     <a href="{{ route('help_center') }}" style="color: var(--color-silver); text-decoration: none; font-size: 0.95rem;">❓ ศูนย์ช่วยเหลือ & FAQ</a>
+             <!-- Service Center -->
+             <div style="display: flex; flex-direction: column; gap: 0.35rem;">
+                 <div style="color: white; font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; gap: 10px; opacity: 0.95;"><i class="fa-solid fa-screwdriver-wrench" style="width: 20px; color: var(--color-silver-light); font-size: 0.85rem;"></i> ศูนย์ซ่อม & ติดตาม</div>
+                 <div style="display: flex; flex-direction: column; gap: 0.5rem; padding-left: 1.25rem; border-left: 1.5px solid rgba(255,255,255,0.08); margin-left: 9px; margin-top: 0.15rem;">
+                     <a href="{{ route('service_center') }}" style="color: var(--color-silver); text-decoration: none; font-size: 0.8rem;">🔧 ส่งซ่อม/เคลมออนไลน์</a>
+                     <a href="{{ route('tracking') }}" style="color: var(--color-silver); text-decoration: none; font-size: 0.8rem;">📦 ติดตามสถานะงาน</a>
+                     <a href="{{ route('help_center') }}" style="color: var(--color-silver); text-decoration: none; font-size: 0.8rem;">❓ ศูนย์ช่วยเหลือ & FAQ</a>
                  </div>
              </div>
 
-             <a href="{{ route('categoryblog') }}" style="color: white; text-decoration: none; font-size: 1.1rem; font-weight: 500; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-newspaper" style="width: 24px; color: var(--color-silver);"></i> ข่าวสารและกิจกรรม</a>
-             <a href="{{ route('quotation.generate') }}" style="color: white; text-decoration: none; font-size: 1.1rem; font-weight: 500; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-file-invoice" style="width: 24px; color: var(--color-silver);"></i> ขอใบเสนอราคา</a>
+             <a href="{{ route('categoryblog') }}" style="color: white; text-decoration: none; font-size: 0.9rem; font-weight: 500; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-newspaper" style="width: 24px; color: var(--color-silver-light); font-size: 0.85rem;"></i> ข่าวสารและกิจกรรม</a>
+             <a href="{{ route('quotation.generate') }}" style="color: white; text-decoration: none; font-size: 0.9rem; font-weight: 500; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-file-invoice" style="width: 24px; color: var(--color-silver-light); font-size: 0.85rem;"></i> ขอใบเสนอราคา</a>
          </div>
 
-         <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 0.5rem 0;">
+         <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.06); margin: 0.25rem 0;">
 
-         <!-- Mobile Auth/Profile -->
-         <div style="display: flex; flex-direction: column; gap: 1rem; font-family: 'Prompt', sans-serif;">
+         <!-- Mobile Auth/Profile (Compact) -->
+         <div style="display: flex; flex-direction: column; gap: 0.6rem; font-family: 'Prompt', sans-serif;">
              @auth
-                 <div style="color: white; font-weight: 600; font-size: 1.05rem;">👤 {{ auth()->user()->name }}</div>
-                 <a href="{{ route('dashboard') }}" style="color: white; text-decoration: none; background: rgba(255,255,255,0.1); padding: 12px; border-radius: 10px; text-align: center; font-weight: 600; font-size: 0.95rem; border: 1px solid rgba(255,255,255,0.15);">💻 แดชบอร์ด/โปรไฟล์</a>
+                 <div style="color: white; font-weight: 600; font-size: 0.85rem; display: flex; align-items: center; gap: 8px;">👤 {{ auth()->user()->name }}</div>
+                 <a href="{{ route('dashboard') }}" style="color: white; text-decoration: none; background: rgba(255,255,255,0.06); padding: 8px 12px; border-radius: 6px; text-align: center; font-weight: 600; font-size: 0.8rem; border: 1px solid rgba(255,255,255,0.1); display: block;">💻 โปรไฟล์/แดชบอร์ด</a>
                  <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
                      @csrf
-                     <button type="submit" style="width: 100%; background: var(--color-danger); color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer; font-family: 'Prompt', sans-serif; font-size: 0.95rem;">🚪 ออกจากระบบ</button>
+                     <button type="submit" style="width: 100%; background: var(--color-danger); color: white; border: none; padding: 8px 12px; border-radius: 6px; font-weight: 700; cursor: pointer; font-family: 'Prompt', sans-serif; font-size: 0.8rem;">🚪 ออกจากระบบ</button>
                  </form>
              @else
-                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                     <a href="{{ route('login') }}" style="color: white; text-decoration: none; background: rgba(255,255,255,0.1); padding: 12px; border-radius: 10px; text-align: center; font-weight: 600; font-size: 0.95rem; border: 1px solid rgba(255,255,255,0.15);">เข้าสู่ระบบ</a>
-                     <a href="{{ route('register') }}" style="color: white; text-decoration: none; background: var(--color-accent); padding: 12px; border-radius: 10px; text-align: center; font-weight: 600; font-size: 0.95rem;">สมัครสมาชิก</a>
+                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                     <a href="{{ route('login') }}" style="color: white; text-decoration: none; background: rgba(255,255,255,0.06); padding: 8px; border-radius: 6px; text-align: center; font-weight: 600; font-size: 0.78rem; border: 1px solid rgba(255,255,255,0.1);">เข้าสู่ระบบ</a>
+                     <a href="{{ route('register') }}" style="color: white; text-decoration: none; background: var(--color-accent); padding: 8px; border-radius: 6px; text-align: center; font-weight: 600; font-size: 0.78rem;">สมัครสมาชิก</a>
                  </div>
              @endauth
          </div>
@@ -415,12 +418,15 @@
     <script>
         function toggleMobileMenu() {
             const drawer = document.querySelector('.mobile-drawer');
-            if (drawer) {
+            const overlay = document.querySelector('.mobile-drawer-overlay');
+            if (drawer && overlay) {
                 if (drawer.style.display === 'none' || drawer.style.display === '') {
                     drawer.style.display = 'flex';
+                    overlay.style.display = 'block';
                     document.body.style.overflow = 'hidden';
                 } else {
                     drawer.style.display = 'none';
+                    overlay.style.display = 'none';
                     document.body.style.overflow = '';
                 }
             }
