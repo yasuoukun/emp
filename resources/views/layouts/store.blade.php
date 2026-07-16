@@ -202,10 +202,13 @@
              <a href="{{ route('products.index') }}" style="color: white; text-decoration: none; font-size: 0.9rem; font-weight: 500; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-box" style="width: 20px; color: var(--color-silver-light); font-size: 0.85rem;"></i> สินค้าทั้งหมด</a>
              <a href="{{ route('promotions.index') }}" style="color: white; text-decoration: none; font-size: 0.9rem; font-weight: 500; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-tags" style="width: 20px; color: var(--color-silver-light); font-size: 0.85rem;"></i> โปรโมชันพิเศษ</a>
 
-             <!-- Services -->
-             <div style="display: flex; flex-direction: column; gap: 0.35rem;">
-                 <div style="color: white; font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; gap: 10px; opacity: 0.95;"><i class="fa-solid fa-handshake-angle" style="width: 20px; color: var(--color-silver-light); font-size: 0.85rem;"></i> บริการ & โซลูชัน</div>
-                 <div style="display: flex; flex-direction: column; gap: 0.5rem; padding-left: 1.25rem; border-left: 1.5px solid rgba(255,255,255,0.08); margin-left: 9px; margin-top: 0.15rem;">
+             <!-- Services Group -->
+             <div style="display: flex; flex-direction: column; gap: 0.25rem;">
+                 <button type="button" onclick="toggleMobileSubmenu('services-sub', this)" style="background: none; border: none; padding: 6px 8px; color: white; font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; justify-content: space-between; width: 100%; cursor: pointer; text-align: left; font-family: 'Prompt', sans-serif; border-radius: 6px;">
+                     <span style="display: flex; align-items: center; gap: 10px; color: white;"><i class="fa-solid fa-handshake-angle" style="width: 20px; color: var(--color-silver-light); font-size: 0.85rem;"></i> บริการ & โซลูชัน</span>
+                     <i class="fa-solid fa-chevron-down submenu-arrow" style="font-size: 0.75rem; transition: transform 0.2s ease; color: var(--color-silver-light);"></i>
+                 </button>
+                 <div id="services-sub" style="display: none; flex-direction: column; gap: 0.5rem; padding-left: 1.25rem; border-left: 1.5px solid rgba(255,255,255,0.08); margin-left: 18px; margin-top: 0.15rem;">
                      <a href="{{ route('services') }}" style="color: var(--color-silver); text-decoration: none; font-size: 0.8rem;">🛠️ บริการทั้งหมดของเรา</a>
                      <a href="{{ route('installment') }}" style="color: var(--color-silver); text-decoration: none; font-size: 0.8rem;">💳 บริการผ่อนชำระ</a>
                      <a href="{{ route('trade_in') }}" style="color: var(--color-silver); text-decoration: none; font-size: 0.8rem;">🔄 เทรดอินเครื่องเก่า</a>
@@ -214,10 +217,13 @@
                  </div>
              </div>
 
-             <!-- Service Center -->
-             <div style="display: flex; flex-direction: column; gap: 0.35rem;">
-                 <div style="color: white; font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; gap: 10px; opacity: 0.95;"><i class="fa-solid fa-screwdriver-wrench" style="width: 20px; color: var(--color-silver-light); font-size: 0.85rem;"></i> ศูนย์ซ่อม & ติดตาม</div>
-                 <div style="display: flex; flex-direction: column; gap: 0.5rem; padding-left: 1.25rem; border-left: 1.5px solid rgba(255,255,255,0.08); margin-left: 9px; margin-top: 0.15rem;">
+             <!-- Service Center Group -->
+             <div style="display: flex; flex-direction: column; gap: 0.25rem;">
+                 <button type="button" onclick="toggleMobileSubmenu('center-sub', this)" style="background: none; border: none; padding: 6px 8px; color: white; font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; justify-content: space-between; width: 100%; cursor: pointer; text-align: left; font-family: 'Prompt', sans-serif; border-radius: 6px;">
+                     <span style="display: flex; align-items: center; gap: 10px; color: white;"><i class="fa-solid fa-screwdriver-wrench" style="width: 20px; color: var(--color-silver-light); font-size: 0.85rem;"></i> ศูนย์ซ่อม & ติดตาม</span>
+                     <i class="fa-solid fa-chevron-down submenu-arrow" style="font-size: 0.75rem; transition: transform 0.2s ease; color: var(--color-silver-light);"></i>
+                 </button>
+                 <div id="center-sub" style="display: none; flex-direction: column; gap: 0.5rem; padding-left: 1.25rem; border-left: 1.5px solid rgba(255,255,255,0.08); margin-left: 18px; margin-top: 0.15rem;">
                      <a href="{{ route('service_center') }}" style="color: var(--color-silver); text-decoration: none; font-size: 0.8rem;">🔧 ส่งซ่อม/เคลมออนไลน์</a>
                      <a href="{{ route('tracking') }}" style="color: var(--color-silver); text-decoration: none; font-size: 0.8rem;">📦 ติดตามสถานะงาน</a>
                      <a href="{{ route('help_center') }}" style="color: var(--color-silver); text-decoration: none; font-size: 0.8rem;">❓ ศูนย์ช่วยเหลือ & FAQ</a>
@@ -425,6 +431,19 @@
                     document.body.style.overflow = 'hidden';
                 } else {
                     document.body.style.overflow = '';
+                }
+            }
+        }
+        function toggleMobileSubmenu(id, buttonEl) {
+            const sub = document.getElementById(id);
+            const arrow = buttonEl.querySelector('.submenu-arrow');
+            if (sub) {
+                if (sub.style.display === 'none' || sub.style.display === '') {
+                    sub.style.display = 'flex';
+                    if (arrow) arrow.style.transform = 'rotate(180deg)';
+                } else {
+                    sub.style.display = 'none';
+                    if (arrow) arrow.style.transform = 'rotate(0deg)';
                 }
             }
         }

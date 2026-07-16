@@ -274,7 +274,7 @@
             <p style="color: #cbd5e1; font-size: 0.95rem; margin-top: 0.5rem;">ดูแลช่วยเหลือลูกค้าและองค์กรทุกท่านด้วยโซลูชันระดับมืออาชีพ</p>
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px;">
+        <div class="shopee-mobile-row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px;">
             <!-- Service 1 -->
             <div style="background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); padding: 2rem; border-radius: 16px; border: 1px solid rgba(226, 232, 240, 0.6); box-shadow: 0 4px 15px rgba(0,0,0,0.01); display: flex; flex-direction: column; align-items: center; text-align: center;">
                 <div style="width: 60px; height: 60px; background: rgba(99, 102, 241, 0.08); color: #6366f1; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; margin-bottom: 1.25rem;">
@@ -336,7 +336,7 @@
             <p style="color: #64748b; font-size: 0.95rem; margin-top: 0.5rem;">ยกระดับคุณภาพและมาตรฐานงานบริการเพื่อตอบสนองต่อธุรกิจคุณสูงสุด</p>
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px;">
+        <div class="shopee-mobile-row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px;">
             <!-- Difference Card 1 -->
             <div class="hover-scale" style="background: white; padding: 2rem; border-radius: 20px; border: 1px solid rgba(226, 232, 240, 0.8); box-shadow: 0 4px 20px rgba(27, 42, 71, 0.02); display: flex; flex-direction: column; gap: 15px;">
                 <div style="width: 50px; height: 50px; background: rgba(99, 102, 241, 0.1); color: #6366f1; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
@@ -389,7 +389,7 @@
             <p style="color: #64748b; font-size: 0.95rem; margin-top: 0.5rem;">ภาพความประทับใจและผลงานการติดตั้งระบบไอทีระดับประเทศ</p>
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px;">
+        <div class="shopee-mobile-row" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px;">
             <!-- Activity 1 -->
             <div class="hover-scale" style="background: white; border-radius: 16px; overflow: hidden; border: 1px solid rgba(226, 232, 240, 0.8); box-shadow: 0 4px 15px rgba(27, 42, 71, 0.02);">
                 <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=600&q=80" alt="โรงเรียนจัตุรัสวิทยาคาร" style="width: 100%; height: 180px; object-fit: cover;">
