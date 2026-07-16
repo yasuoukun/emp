@@ -368,8 +368,14 @@ body {
     display: none;
 }
 
+@media (min-width: 1201px) {
+    .mobile-drawer {
+        display: none !important;
+    }
+}
+
 /* Mobile and Tablet Styling Updates */
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
     .topbar {
         display: none !important;
     }
