@@ -25,7 +25,7 @@
             <!-- Brand Filter (Checkboxes) -->
             <div>
                 <h4 style="font-weight: 700; color: var(--color-navy); margin-bottom: 0.6rem; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em;">แบรนด์ / ยี่ห้อ</h4>
-                <div style="display: flex; flex-direction: column; gap: 8px; max-height: 160px; overflow-y: auto; padding-right: 5px;">
+                <div style="display: flex; flex-direction: column; gap: 8px;">
                     @foreach($brands as $brand)
                     @php
                         $brandChecked = is_array(request('brand_ids')) && in_array($brand->id, request('brand_ids')) || request('brand_id') == $brand->id;
@@ -42,7 +42,7 @@
             <!-- Category Filter (Checkboxes) -->
             <div>
                 <h4 style="font-weight: 700; color: var(--color-navy); margin-bottom: 0.6rem; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em;">หมวดหมู่สินค้า</h4>
-                <div style="display: flex; flex-direction: column; gap: 8px; max-height: 160px; overflow-y: auto; padding-right: 5px;">
+                <div style="display: flex; flex-direction: column; gap: 8px;">
                     @foreach($categories as $category)
                     @php
                         $catChecked = is_array(request('category_ids')) && in_array($category->id, request('category_ids')) || request('category_id') == $category->id;

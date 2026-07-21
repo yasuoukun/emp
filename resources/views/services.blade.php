@@ -147,8 +147,8 @@
 
             <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.08);">
                 <div style="font-size: 0.85rem; color: var(--color-accent); font-weight: 700; margin-bottom: 8px;">STEP 11</div>
-                <h4 style="margin: 0 0 10px 0; font-size: 1.1rem; font-weight: 600;">Trade-in</h4>
-                <p style="color: #94A3B8; font-size: 0.88rem; line-height: 1.6; margin: 0;">รับประเมินราคารับซื้ออุปกรณ์เก่าเพื่อนำมาอัปเกรดรุ่นใหม่</p>
+                <h4 style="margin: 0 0 10px 0; font-size: 1.1rem; font-weight: 600;">Procurement</h4>
+                <p style="color: #94A3B8; font-size: 0.88rem; line-height: 1.6; margin: 0;">บริการจัดหาสินค้าไอทีตามความต้องการเฉพาะขององค์กร</p>
             </div>
 
             <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.08);">
@@ -251,21 +251,21 @@
     <!-- Trade-In & Leasing Info Block -->
     <div class="shopee-mobile-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 5rem;">
         
-        <!-- Trade-in -->
+        <!-- Procurement -->
         <div style="background: white; border: 1px solid var(--color-silver); border-radius: 20px; padding: 3rem 2.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.01);">
-            <div style="font-size: 2.2rem; margin-bottom: 1rem; color: var(--color-accent);"><i class="fa-solid fa-arrows-spin"></i></div>
-            <h3 style="font-size: 1.5rem; font-weight: 700; color: var(--color-navy-dark); margin-top: 0; margin-bottom: 1rem;">บริการรับ Trade-In สินค้าเก่า อัปเกรดสินค้าใหม่</h3>
+            <div style="font-size: 2.2rem; margin-bottom: 1rem; color: var(--color-accent);"><i class="fa-solid fa-boxes-packing"></i></div>
+            <h3 style="font-size: 1.5rem; font-weight: 700; color: var(--color-navy-dark); margin-top: 0; margin-bottom: 1rem;">บริการจัดหาสินค้าไอทียกเซ็ต (IT Procurement)</h3>
             <p style="color: var(--color-grey); font-size: 0.95rem; line-height: 1.7; margin-bottom: 1.5rem;">
-                เราประเมินและรับซื้ออุปกรณ์ไอทีเก่าอย่างรวดเร็วและปลอดภัย เพื่อเปลี่ยนมูลค่าเครื่องเดิมเป็นส่วนลดในการซื้ออุปกรณ์ใหม่ รองรับอุปกรณ์ไอทีทุกชนิด:
+                จัดหาและจัดส่งอุปกรณ์ไอทีแท้ประกันศูนย์ไทยสำหรับเปิดออฟฟิศใหม่ โรงเรียน หรือขยายสาขา พร้อมราคาพิเศษยกล็อต:
             </p>
             <ul style="color: var(--color-grey); font-size: 0.9rem; line-height: 1.8; padding-left: 20px; margin: 0;">
-                <li>คอมพิวเตอร์และโน้ตบุ๊ค (Mac, Windows, Laptop)</li>
-                <li>สมาร์ทโฟนและแท็บเล็ต (iPhone, iPad, Android)</li>
-                <li>จอภาพและอุปกรณ์ต่อพ่วง (Monitor, Printer, Accessories)</li>
-                <li>อุปกรณ์เน็ตเวิร์กและเซิร์ฟเวอร์ (Router, Server, NAS)</li>
+                <li>คอมพิวเตอร์และโน้ตบุ๊ค (MacBook, iMac, Windows Laptop)</li>
+                <li>สมาร์ทโฟนและแท็บเล็ตเพื่อการทำงาน (iPhone, iPad)</li>
+                <li>อุปกรณ์สำนักงานครบวงจร (Printer, Projector, Smart TV)</li>
+                <li>อุปกรณ์เน็ตเวิร์กและเซิร์ฟเวอร์ (Router, Switch, Access Point)</li>
             </ul>
-            <a href="{{ route('trade_in') }}" style="color: var(--color-accent); font-weight: 600; text-decoration: none; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 6px; margin-top: 1.5rem;">
-                เข้าสู่ระบบประเมินราคาเครื่องเก่า ➔
+            <a href="{{ route('quotation.generate') }}" style="color: var(--color-accent); font-weight: 600; text-decoration: none; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 6px; margin-top: 1.5rem;">
+                ขอใบเสนอราคาสินค้ายกล็อต ➔
             </a>
         </div>
 

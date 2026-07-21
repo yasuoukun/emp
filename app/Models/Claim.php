@@ -21,7 +21,14 @@ class Claim extends Model
         'claim_type',
         'issue_description',
         'status',
-        'admin_notes'
+        'admin_notes',
+        'estimated_cost',
+        'image_paths',
+    ];
+
+    protected $casts = [
+        'image_paths' => 'array',
+        'estimated_cost' => 'decimal:2',
     ];
 
     protected static function boot()

@@ -127,6 +127,32 @@
         useQuickReply(text) {
             this.newMessage = text;
         },
+        uploadAdminAttachment(e) {
+            const file = e.target.files[0];
+            if (!file || !this.activeChat) return;
+
+            const formData = new FormData();
+            formData.append('attachment', file);
+            formData.append('content', this.newMessage);
+            formData.append('receiver_id', this.activeChat.id);
+
+            fetch('/messages', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                this.messages.push(data);
+                this.newMessage = '';
+                e.target.value = '';
+                this.scrollToBottom();
+                this.fetchUsers();
+            })
+            .catch(err => console.error(err));
+        },
         sendReply() {
             if (this.newMessage.trim() === '' || !this.activeChat) return;
             fetch('/messages', {
@@ -153,7 +179,7 @@
             }, 50);
         },
         updateNavBadges() {
-            fetch('/admin/notification-counts?_t=' + Date.now(), { headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' } })
+            fetch('/admin/notification-counts?_t=' + Date.now(), { headers: { 'X-Requested-With': 'XMLHttpRequest', 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' } })
                 .then(res => res.json())
                 .then(data => {
                     if (data.unread_chats > this.unreadChatsCount) {
@@ -210,11 +236,11 @@
                         <div @click="selectUser(user)" 
                              :class="activeChat && activeChat.id === user.id ? 'bg-slate-50 border-r-4 border-slate-900' : 'border-r-4 border-transparent hover:bg-gray-50'"
                              class="p-4 border-b border-gray-50 cursor-pointer transition flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 font-semibold text-sm">
-                                👤
+                            <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 font-semibold text-sm overflow-hidden border border-gray-200">
+                                <img :src="user.avatar_url ? user.avatar_url : 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.name)" :alt="user.name" class="w-full h-full object-cover">
                             </div>
                             <div class="flex-grow min-w-0">
-                                <div class="font-semibold text-gray-800 truncate" x-text="user.name"></div>
+                                <div class="font-semibold text-gray-800 truncate" x-text="user.name ? user.name : (user.email ? user.email : 'ลูกค้า #' + user.id)"></div>
                                 <template x-if="user.last_message_content">
                                     <div class="text-xs truncate mt-1 flex items-center gap-1"
                                          :class="user.unread_count > 0 ? 'text-slate-800 font-bold' : 'text-gray-500'">
@@ -264,8 +290,8 @@
                                 <i class="fa-solid fa-chevron-left text-lg"></i>
                                 <span class="text-sm font-semibold">กลับ</span>
                             </button>
-                            <div class="w-10 h-10 rounded-full bg-slate-800 text-white flex items-center justify-center text-sm font-bold">
-                                👤
+                            <div class="w-10 h-10 rounded-full bg-slate-800 text-white flex items-center justify-center text-sm font-bold overflow-hidden border border-gray-200">
+                                <img :src="activeChat ? (activeChat.avatar_url || ('https://ui-avatars.com/api/?name=' + encodeURIComponent(activeChat.name))) : ''" class="w-full h-full object-cover">
                             </div>
                             <div>
                                 <h4 class="font-bold text-gray-800" x-text="activeChat ? activeChat.name : ''"></h4>
@@ -285,19 +311,36 @@
                     </div>
 
                     <!-- Messages Container -->
-                    <div id="admin-chat-messages" class="flex-grow min-h-0 p-6 overflow-y-auto bg-slate-50/50 flex flex-col gap-4">
+                    <div id="admin-chat-messages" class="flex-grow min-h-0 p-6 overflow-y-auto bg-slate-50 flex flex-col gap-3">
                         <template x-for="msg in messages" :key="msg.id">
-                            <div :class="msg.sender_id !== activeChat.id ? 'self-end items-end' : 'self-start items-start'" 
-                                 class="flex flex-col max-w-[75%] gap-1">
-                                <div :class="msg.sender_id !== activeChat.id ? 'bg-slate-900 text-white rounded-2xl rounded-tr-none shadow-sm' : 'bg-white text-gray-800 border border-gray-100 rounded-2xl rounded-tl-none shadow-sm'" 
-                                     class="px-4 py-2.5 text-sm line-height-1.5 break-words">
-                                    <span x-text="msg.content"></span>
+                            <div :style="msg.sender_id != activeChat.id ? 'width: 100%; display: flex; flex-direction: column; align-items: flex-end; margin-bottom: 4px;' : 'width: 100%; display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 4px;'">
+                                <div :style="msg.sender_id != activeChat.id 
+                                    ? 'background: #2563EB; color: #ffffff; border-radius: 18px 18px 4px 18px; box-shadow: 0 2px 6px rgba(37,99,235,0.2);' 
+                                    : 'background: #E2E8F0; color: #0F172A; border-radius: 18px 18px 18px 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);'" 
+                                      style="padding: 12px 18px; font-size: 0.95rem; line-height: 1.5; font-weight: 500; width: max-content; max-width: 75%; min-width: 32px; word-break: break-word; overflow-wrap: break-word; text-align: left; box-sizing: border-box;">
+                                    <!-- Media Attachment -->
+                                    <template x-if="msg.attachment_path">
+                                        <div class="mb-2">
+                                            <template x-if="msg.attachment_type === 'image'">
+                                                <a :href="'/storage/' + msg.attachment_path" target="_blank">
+                                                    <img :src="'/storage/' + msg.attachment_path" class="max-w-xs max-h-48 rounded-xl block object-cover">
+                                                </a>
+                                            </template>
+                                            <template x-if="msg.attachment_type === 'video'">
+                                                <video :src="'/storage/' + msg.attachment_path" controls class="max-w-xs max-h-48 rounded-xl block"></video>
+                                            </template>
+                                            <template x-if="msg.attachment_type === 'file'">
+                                                <a :href="'/storage/' + msg.attachment_path" target="_blank" class="underline font-bold">📎 ดาวน์โหลดไฟล์แนบ</a>
+                                            </template>
+                                        </div>
+                                    </template>
+                                    <span x-show="msg.content" x-text="msg.content"></span>
                                 </div>
-                                <div class="flex items-center gap-1.5 text-[10px] text-gray-400 px-1">
-                                    <template x-if="msg.sender_id === activeChat.id">
+                                <div :style="msg.sender_id != activeChat.id ? 'text-align: right;' : 'text-align: left;'" class="text-[10px] text-gray-400 px-1.5 mt-1">
+                                    <template x-if="msg.sender_id == activeChat.id">
                                         <span class="font-bold text-blue-600">👤 ลูกค้า</span>
                                     </template>
-                                    <template x-if="msg.sender_id !== activeChat.id">
+                                    <template x-if="msg.sender_id != activeChat.id">
                                         <span class="font-bold text-slate-500" x-text="'🧑‍💻 ' + (msg.sender ? msg.sender.name : 'แอดมิน')"></span>
                                     </template>
                                     <span>•</span>
@@ -321,7 +364,12 @@
                         </div>
 
                         <!-- Main Send Box -->
-                        <div class="flex items-center gap-3">
+                        <div class="flex items-center gap-2">
+                            <input type="file" id="admin-chat-file" @change="uploadAdminAttachment($event)" accept="image/*,video/*" class="hidden">
+                            <button type="button" @click="document.getElementById('admin-chat-file').click()" 
+                                    class="p-2.5 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-xl transition font-bold text-sm" title="แนบรูปภาพ/วิดีโอ">
+                                📷
+                            </button>
                             <input type="text" x-model="newMessage" @keydown.enter="sendReply()" 
                                    placeholder="พิมพ์ข้อความตอบกลับลูกค้าที่นี่..." 
                                    class="flex-grow px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-slate-800 focus:border-slate-800 outline-none transition bg-gray-50/50 focus:bg-white">

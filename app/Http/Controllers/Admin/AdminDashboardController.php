@@ -46,9 +46,54 @@ class AdminDashboardController extends Controller
             'ยกเลิกแล้ว' => Order::where('status', 'cancelled')->count(),
         ];
 
+        // 1. Top Selling Products
+        $topSellingProducts = \App\Models\OrderItem::select('product_id', \Illuminate\Support\Facades\DB::raw('SUM(quantity) as total_quantity'), \Illuminate\Support\Facades\DB::raw('SUM(price * quantity) as total_sales'))
+            ->whereHas('order', function($q) {
+                $q->whereIn('status', ['confirmed', 'shipped', 'delivered']);
+            })
+            ->groupBy('product_id')
+            ->orderBy('total_quantity', 'desc')
+            ->with('product.images')
+            ->take(5)
+            ->get();
+
+        // 2. Most Wishlisted Products
+        $mostWishlistedProducts = \App\Models\Wishlist::select('product_id', \Illuminate\Support\Facades\DB::raw('COUNT(*) as wishlist_count'))
+            ->groupBy('product_id')
+            ->orderBy('wishlist_count', 'desc')
+            ->with('product.images')
+            ->take(5)
+            ->get();
+
+        // 3. Highest Rated Products
+        $topRatedProducts = Product::withCount('reviews')
+            ->withAvg('reviews', 'rating')
+            ->with('images')
+            ->having('reviews_count', '>', 0)
+            ->orderBy('reviews_avg_rating', 'desc')
+            ->take(5)
+            ->get();
+            
+        if ($topRatedProducts->isEmpty()) {
+            $topRatedProducts = Product::with('images')->where('is_popular', true)->take(5)->get();
+        }
+
+        // 4. Low Stock Alert Products
+        $lowStockProducts = Product::with('images')
+            ->where('stock', '<=', 5)
+            ->orderBy('stock', 'asc')
+            ->take(5)
+            ->get();
+
+        $totalWishlistsCount = \App\Models\Wishlist::count();
+        $totalReviewsCount = \App\Models\Review::count();
+        $avgRating = round(\App\Models\Review::avg('rating') ?: 5.0, 1);
+
         return view('admin.dashboard', compact(
             'totalOrders', 'pendingOrders', 'confirmedOrders', 'totalProducts', 'unreadChats',
-            'totalRevenue', 'monthlyRevenue', 'salesLast7Days', 'labelsLast7Days', 'orderStatuses'
+            'totalRevenue', 'monthlyRevenue', 'salesLast7Days', 'labelsLast7Days', 'orderStatuses',
+            'topSellingProducts', 'mostWishlistedProducts', 'topRatedProducts', 'lowStockProducts',
+            'totalWishlistsCount', 'totalReviewsCount', 'avgRating'
         ));
     }
 }

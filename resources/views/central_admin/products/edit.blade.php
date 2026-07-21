@@ -16,6 +16,19 @@
             </div>
             @endif
 
+            @if($errors->any())
+            <div class="mb-6 p-4 bg-rose-50 border-l-4 border-rose-500 text-rose-800 rounded-r-xl shadow-sm">
+                <div class="font-bold flex items-center gap-2 mb-1">
+                    <i class="fa-solid fa-triangle-exclamation text-rose-500"></i> กรอกข้อมูลไม่ถูกต้องตามระเบียบ:
+                </div>
+                <ul class="list-disc list-inside text-xs space-y-1">
+                    @foreach($errors->all() as $err)
+                        <li>{{ $err }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
+
             <div class="bg-white overflow-hidden shadow-sm rounded-3xl border border-gray-100 p-8">
                 
                 <!-- Current Product Images Manager (show FIRST so admin sees existing images) -->
@@ -78,15 +91,19 @@
                     @csrf
                     @method("PUT")
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        <div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                        <div class="md:col-span-2">
                             <label class="block text-sm font-bold text-slate-700 mb-2">ชื่อสินค้า</label>
                             <input type="text" name="name" value="{{ old('name', $product->name) }}" class="mt-1 block w-full rounded-xl border-gray-200 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
                         </div>
                         <div>
-                            <label class="block text-sm font-bold text-slate-700 mb-2">สต็อก (จำนวน)</label>
-                            <input type="number" name="stock" value="{{ old('stock', $product->stock) }}" class="mt-1 block w-full rounded-xl border-gray-200 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required min="0">
+                            <label class="block text-sm font-bold text-slate-700 mb-2">รหัสสินค้า / SKU</label>
+                            <input type="text" name="sku" value="{{ old('sku', $product->sku) }}" class="mt-1 block w-full rounded-xl border-gray-200 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="เช่น SKU-IP15P-256">
                         </div>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-sm font-bold text-slate-700 mb-2">สต็อก (จำนวน)</label>
+                        <input type="number" name="stock" value="{{ old('stock', $product->stock) }}" class="mt-1 block w-full rounded-xl border-gray-200 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required min="0">
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">

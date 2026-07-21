@@ -17,17 +17,45 @@
         </p>
     </div>
 
-    <!-- Cycle Intro -->
-    <div style="text-align: center; margin-bottom: 4rem;">
-        <h2 style="font-size: 2.2rem; font-weight: 700; color: var(--color-navy-dark); margin-bottom: 1.5rem;">เราคำนึงถึงวงจรชีวิตของอุปกรณ์ไอทีองค์กรอย่างครบถ้วน</h2>
-        <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; font-size: 1.1rem; color: var(--color-grey); font-weight: 500;">
-            <span style="background: white; padding: 8px 18px; border-radius: 30px; border: 1px solid var(--color-silver);">1. วางแผนซื้อ</span>
-            <span style="color: var(--color-accent); font-weight: 700;">➔</span>
-            <span style="background: white; padding: 8px 18px; border-radius: 30px; border: 1px solid var(--color-silver);">2. ตั้งค่า - นำไปใช้งาน</span>
-            <span style="color: var(--color-accent); font-weight: 700;">➔</span>
-            <span style="background: white; padding: 8px 18px; border-radius: 30px; border: 1px solid var(--color-silver);">3. บริการช่วยเหลือ</span>
-            <span style="color: var(--color-accent); font-weight: 700;">➔</span>
-            <span style="background: white; padding: 8px 18px; border-radius: 30px; border: 1px solid var(--color-silver);">4. เปลี่ยนรุ่น - เทรดอิน</span>
+    <!-- Video Showcase & Corporate Media -->
+    <div style="margin-bottom: 5rem;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; align-items: center; margin-bottom: 3rem;">
+            <div>
+                <h2 style="font-size: 2rem; font-weight: 700; color: var(--color-navy-dark); margin-bottom: 1rem;">
+                    ทำไมธุรกิจยุคใหม่จึงเลือก Apple Business Manager?
+                </h2>
+                <p style="color: var(--color-grey); font-size: 1rem; line-height: 1.8; margin-bottom: 1.5rem;">
+                    ช่วยลดเวลาของแผนก IT ในการเซ็ตอัพคอมพิวเตอร์และสมาร์ทโฟนลงกว่า 80% ปรับแต่งค่าความปลอดภัยแบบ Zero-touch Deployment โดยที่พนักงานเพียงแค่เปิดเครื่องขึ้นมาก็พร้อมใช้งานแอปพลิเคชันของบริษัทได้ทันที
+                </p>
+                <div style="display: flex; gap: 15px;">
+                    <div style="background: white; border: 1px solid var(--color-silver); padding: 1rem 1.5rem; border-radius: 16px; flex: 1;">
+                        <h4 style="margin: 0; font-size: 1.3rem; font-weight: 800; color: var(--color-accent);">80%</h4>
+                        <p style="margin: 4px 0 0; font-size: 0.8rem; color: var(--color-grey);">ลดเวลาทำงานของฝ่าย IT</p>
+                    </div>
+                    <div style="background: white; border: 1px solid var(--color-silver); padding: 1rem 1.5rem; border-radius: 16px; flex: 1;">
+                        <h4 style="margin: 0; font-size: 1.3rem; font-weight: 800; color: #059669;">100%</h4>
+                        <p style="margin: 4px 0 0; font-size: 0.8rem; color: var(--color-grey);">การควบคุมความปลอดภัยข้อมูล</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Embedded Video Player -->
+            <div style="position: relative; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.12); border: 2px solid var(--color-silver-light); background: #000; aspect-ratio: 16/9;">
+                <iframe width="100%" height="100%" src="https://www.youtube.com/embed/S2Y8W3C3K70" title="Apple Business Manager Overview" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            </div>
+        </div>
+
+        <!-- Corporate Photo Grid -->
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
+            <div style="border-radius: 16px; overflow: hidden; height: 180px;">
+                <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=600" alt="Modern Office" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            </div>
+            <div style="border-radius: 16px; overflow: hidden; height: 180px;">
+                <img src="https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&q=80&w=600" alt="Team Work Mac" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            </div>
+            <div style="border-radius: 16px; overflow: hidden; height: 180px;">
+                <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&q=80&w=600" alt="Business Meeting" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            </div>
         </div>
     </div>
 

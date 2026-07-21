@@ -28,6 +28,16 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        $intended = session('url.intended');
+        if ($intended && (
+            str_contains($intended, 'notification-counts') ||
+            str_contains($intended, 'ajax') ||
+            str_contains($intended, 'list-ajax') ||
+            str_contains($intended, '_t=')
+        )) {
+            session()->forget('url.intended');
+        }
+
         return redirect()->intended(route('dashboard', absolute: false));
     }
 

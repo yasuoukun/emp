@@ -62,6 +62,15 @@ body {
     top: 0;
     z-index: 1000;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.navbar.navbar-scrolled {
+    padding: 0.5rem 2rem !important;
+    background: rgba(15, 23, 42, 0.85) !important;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
 }
 
 .navbar-brand {
@@ -120,6 +129,16 @@ body {
     margin-top: 8px;
 }
 
+.navbar-item-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.navbar-item-dropdown:hover .navbar-dropdown-menu,
+.navbar-item-dropdown.active .navbar-dropdown-menu {
+    display: block !important;
+}
+
 /* Invisible hover bridge to prevent menu from closing when crossing the margin gap */
 .navbar-dropdown-menu::after {
     content: '';
@@ -166,20 +185,15 @@ body {
     transform: translateX(4px);
 }
 
-.navbar-item-dropdown:hover .navbar-dropdown-menu {
-    display: block;
-}
-
 /* Top Bar */
 .topbar {
     background-color: var(--color-navy-dark);
     color: var(--color-silver-light);
-    font-size: 0.875rem;
-    padding: 0.5rem 2rem;
+    font-size: 0.85rem;
+    padding: 0.5rem 1.5rem;
     display: flex;
     justify-content: space-between;
-    position: relative;
-    z-index: 1010;
+    align-items: center;
 }
 
 .topbar a {
@@ -201,6 +215,16 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 1rem;
+}
+
+/* Responsiveness for laptop & tablet screens */
+@media (max-width: 1240px) {
+    .navbar-links {
+        display: none !important;
+    }
+    .mobile-actions {
+        display: flex !important;
+    }
 }
 
 /* Mobile Responsiveness */

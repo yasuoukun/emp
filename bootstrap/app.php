@@ -17,5 +17,10 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        $exceptions->render(function (\Illuminate\Session\TokenMismatchException $e, $request) {
+            if ($request->expectsJson()) {
+                return response()->json(['message' => 'หน้าเว็บหมดอายุ กรุณารีเฟรชหน้าเว็บแล้วลองใหม่อีกครั้ง'], 419);
+            }
+            return redirect()->back()->withInput($request->except('_token', 'password'))->with('error', 'หน้าเว็บหรือเซสชันของคุณหมดอายุแล้ว กรุณากดลองใหม่อีกครั้งครับ');
+        });
     })->create();

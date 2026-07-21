@@ -47,7 +47,7 @@
                             @if(in_array(auth()->user()->role, ['admin', 'super_admin']))
                                 <!-- Dropdown 1: คลังสินค้า (Products, Categories, Brands, Stock) -->
                                 <div x-data="{ open: false }" class="relative" @click.away="open = false">
-                                    <button @click="open = !open" 
+                                    <button @click="open = !open" onclick="toggleAdminNavDropdown(this)"
                                             class="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all {{ (request()->routeIs('central_admin.products.*') || request()->routeIs('central_admin.categories.*') || request()->routeIs('central_admin.brands.*') || request()->routeIs('admin.stock.*')) ? 'bg-gradient-to-r from-violet-600 to-purple-600 text-white shadow-md' : 'text-slate-300 hover:bg-[#2A3B5C] hover:text-white' }}">
                                         <i class="fa-solid fa-boxes-stacked text-sm"></i>
                                         <span>สินค้า & คลัง</span>
@@ -60,9 +60,13 @@
                                          class="absolute left-0 mt-2 w-48 rounded-xl bg-slate-900 border border-slate-700/80 shadow-2xl py-2 z-50"
                                          style="display: none;">
                                         
+                                        <a href="{{ route('central_admin.products.create') }}" 
+                                           class="flex items-center gap-2 px-4 py-2 text-xs font-bold text-emerald-400 hover:bg-emerald-600 hover:text-white transition-all border-b border-slate-800">
+                                            <i class="fa-solid fa-circle-plus w-4"></i> + เพิ่มสินค้าใหม่
+                                        </a>
                                         <a href="{{ route('central_admin.products.index') }}" 
-                                           class="flex items-center gap-2 px-4 py-2 text-xs font-bold transition-all {{ request()->routeIs('central_admin.products.*') ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
-                                            <i class="fa-solid fa-mobile-screen-button w-4"></i> จัดการสินค้า
+                                           class="flex items-center gap-2 px-4 py-2 text-xs font-bold transition-all {{ request()->routeIs('central_admin.products.index') ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                                            <i class="fa-solid fa-mobile-screen-button w-4"></i> รายการสินค้าทั้งหมด
                                         </a>
                                         <a href="{{ route('central_admin.categories.index') }}" 
                                            class="flex items-center gap-2 px-4 py-2 text-xs font-bold transition-all {{ request()->routeIs('central_admin.categories.*') ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
@@ -82,7 +86,7 @@
 
                             <!-- Dropdown 2: งานขาย & บริการ (Orders, Claims, Quotations) -->
                             <div x-data="{ open: false }" class="relative" @click.away="open = false">
-                                <button @click="open = !open" 
+                                <button @click="open = !open" onclick="toggleAdminNavDropdown(this)"
                                         class="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all relative {{ (request()->routeIs('admin.orders.*') || request()->routeIs('admin.claims.*') || request()->routeIs('admin.quotations.*')) ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md' : 'text-slate-300 hover:bg-[#2A3B5C] hover:text-white' }}">
                                     <i class="fa-solid fa-cart-shopping text-sm"></i>
                                     <span>ขาย & บริการ</span>
@@ -121,7 +125,7 @@
                             @if(in_array(auth()->user()->role, ['admin', 'super_admin']))
                                 <!-- Dropdown 3: การตลาด & หน้าแรก (Coupons, Reviews, CMS) -->
                                 <div x-data="{ open: false }" class="relative" @click.away="open = false">
-                                    <button @click="open = !open" 
+                                    <button @click="open = !open" onclick="toggleAdminNavDropdown(this)"
                                             class="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all {{ (request()->routeIs('central_admin.coupons.*') || request()->routeIs('central_admin.reviews.*') || request()->routeIs('central_admin.cms.*')) ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md' : 'text-slate-300 hover:bg-[#2A3B5C] hover:text-white' }}">
                                         <i class="fa-solid fa-bullhorn text-sm"></i>
                                         <span>การตลาด & CMS</span>
@@ -154,6 +158,12 @@
                                            class="flex items-center gap-2 px-4 py-2 text-xs font-bold transition-all {{ request()->routeIs('central_admin.cms.*') ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                                             <i class="fa-solid fa-window-restore w-4"></i> จัดการหน้าแรก
                                         </a>
+                                        @if(auth()->user()->role === 'super_admin')
+                                        <a href="{{ route('central_admin.users.index') }}" 
+                                           class="flex items-center gap-2 px-4 py-2 text-xs font-bold transition-all {{ request()->routeIs('central_admin.users.*') ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                                            <i class="fa-solid fa-users-gear w-4"></i> จัดการสมาชิก & สิทธิ์
+                                        </a>
+                                        @endif
                                     </div>
                                 </div>
                             @endif
@@ -176,7 +186,8 @@
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
-                        <button class="inline-flex items-center px-3 py-2 border border-[#2A3B5C] text-sm leading-4 font-medium rounded-xl text-slate-300 bg-[#121C30]/50 hover:text-white hover:border-slate-400 focus:outline-none transition ease-in-out duration-150">
+                        <button class="inline-flex items-center px-3 py-1.5 border border-[#2A3B5C] text-sm leading-4 font-medium rounded-xl text-slate-300 bg-[#121C30]/50 hover:text-white hover:border-slate-400 focus:outline-none transition ease-in-out duration-150">
+                            <img src="{{ Auth::user()->avatar_url }}" alt="{{ Auth::user()->name }}" class="w-6 h-6 rounded-full object-cover mr-2 border border-slate-400">
                             <div>{{ Auth::user()->name }}</div>
 
                             <div class="ms-1">
@@ -260,6 +271,11 @@
                     <x-responsive-nav-link :href="route('central_admin.cms.index')" :active="request()->routeIs('central_admin.cms.*')" class="text-slate-300">
                         🖥️ จัดการหน้าแรก (CMS)
                     </x-responsive-nav-link>
+                    @if(auth()->user()->role === 'super_admin')
+                    <x-responsive-nav-link :href="route('central_admin.users.index')" :active="request()->routeIs('central_admin.users.*')" class="text-slate-300">
+                        👥 จัดการสมาชิก & สิทธิ์ (Super Admin)
+                    </x-responsive-nav-link>
+                    @endif
                 @endif
 
                 <x-responsive-nav-link :href="route('admin.orders.index')" :active="request()->routeIs('admin.orders.index')" class="text-slate-300 flex items-center justify-between">
@@ -325,6 +341,7 @@
         function pollNotifications() {
             fetch('/admin/notification-counts?_t=' + Date.now(), {
                 headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
                     'Cache-Control': 'no-cache',
                     'Pragma': 'no-cache'
                 }
@@ -401,3 +418,33 @@
         </div>
     </div>
 </nav>
+
+<script>
+    function toggleAdminNavDropdown(btn) {
+        const container = btn.closest('.relative');
+        if (!container) return;
+        const menu = container.querySelector('.absolute');
+        if (!menu) return;
+
+        const isHidden = menu.style.display === 'none' || getComputedStyle(menu).display === 'none';
+
+        // Close all other nav dropdowns first
+        document.querySelectorAll('nav .relative .absolute').forEach(el => {
+            if (el !== menu) el.style.display = 'none';
+        });
+
+        if (isHidden) {
+            menu.style.display = 'block';
+        } else {
+            menu.style.display = 'none';
+        }
+    }
+
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('nav .relative')) {
+            document.querySelectorAll('nav .relative .absolute').forEach(el => {
+                el.style.display = 'none';
+            });
+        }
+    });
+</script>

@@ -21,8 +21,20 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'avatar',
+        'phone',
         'password',
     ];
+
+    public function getAvatarUrlAttribute()
+    {
+        if ($this->avatar) {
+            return str_starts_with($this->avatar, 'http') ? $this->avatar : \Illuminate\Support\Facades\Storage::url($this->avatar);
+        }
+        return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&color=FFFFFF&background=1B2A47';
+    }
+
+    protected $appends = ['avatar_url'];
 
     /**
      * The attributes that should be hidden for serialization.

@@ -88,20 +88,48 @@
                     @endif
                 </div>
 
-                <!-- Admin Notes -->
+                <!-- Admin Notes & Estimated Cost -->
+                @if($result->estimated_cost)
+                    <div style="background: #FFFBEB; border: 1px solid #FCD34D; border-radius: 12px; padding: 1.2rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <span style="color: #92400E; font-size: 0.9rem; font-weight: 600; display: block;">💰 ค่าซ่อมประเมินเบื้องต้น:</span>
+                            <span style="color: #B45309; font-size: 0.8rem;">(ประเมินโดยทีมช่าง ดีดี.ไอที.คอม)</span>
+                        </div>
+                        <strong style="color: #D97706; font-size: 1.4rem; font-weight: 800;">฿{{ number_format($result->estimated_cost, 2) }}</strong>
+                    </div>
+                @endif
+
+                @if(!empty($result->image_paths) && count($result->image_paths) > 0)
+                    <div style="margin-bottom: 1.5rem; background: var(--color-grey-bg); padding: 1rem; border-radius: 12px; border: 1px solid var(--color-silver-light);">
+                        <strong style="color: var(--color-navy-dark); font-size: 0.85rem; display: block; margin-bottom: 8px;">📷 รูปถ่ายตัวเครื่องที่แนบไว้:</strong>
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                            @foreach($result->image_paths as $img)
+                            <a href="{{ Storage::url($img) }}" target="_blank" style="width: 75px; height: 75px; border-radius: 8px; overflow: hidden; border: 1px solid var(--color-silver); display: block;">
+                                <img src="{{ Storage::url($img) }}" style="width: 100%; height: 100%; object-fit: cover;">
+                            </a>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+
                 @if($result->admin_notes)
-                    <div style="background: var(--color-grey-bg); border-radius: 8px; padding: 1.25rem; border-left: 4px solid var(--color-navy); margin-bottom: 1.5rem;">
+                    <div style="background: var(--color-grey-bg); border-radius: 12px; padding: 1.25rem; border-left: 4px solid var(--color-navy); margin-bottom: 1.5rem;">
                         <strong style="color: var(--color-navy-dark); font-size: 0.95rem; display: block; margin-bottom: 5px;">✍️ บันทึกความคืบหน้าจากเจ้าหน้าที่:</strong>
                         <p style="color: var(--color-grey); font-size: 0.9rem; margin: 0; line-height: 1.5;">{!! nl2br(e($result->admin_notes)) !!}</p>
                     </div>
                 @endif
 
                 <!-- Contact Support -->
-                <div style="border-top: 1px solid var(--color-silver); padding-top: 1.5rem; text-align: center;">
-                    <p style="color: var(--color-grey); font-size: 0.85rem; margin-bottom: 10px;">มีข้อสงสัยเกี่ยวกับงานซ่อม/เคลมชิ้นนี้? สอบถามเพิ่มเติมได้ที่ LINE OA</p>
-                    <a href="https://line.me/ti/p/@dditcom" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; background: #06c755; color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem;">
-                        <i class="fa-brands fa-line"></i> สอบถามสถานะงานเคลม
-                    </a>
+                <div style="border-top: 1px solid var(--color-silver); padding-top: 1.5rem; text-align: center; display: flex; flex-direction: column; gap: 10px; align-items: center;">
+                    <p style="color: var(--color-grey); font-size: 0.85rem; margin: 0;">มีข้อสงสัยเกี่ยวกับงานซ่อม/เคลมชิ้นนี้? ติดต่อแอดมินได้ทันที</p>
+                    <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                        <button type="button" onclick="window.dispatchEvent(new CustomEvent('open-customer-chat'))" style="background: var(--color-navy); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; font-size: 0.9rem; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
+                            💬 สอบถามแอดมินทางแชทสดเกี่ยวกับงานซ่อมนี้
+                        </button>
+                        <a href="https://line.me/ti/p/@dditcom" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; background: #06c755; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem;">
+                            <i class="fa-brands fa-line"></i> ทัก Line OA
+                        </a>
+                    </div>
                 </div>
 
             @else

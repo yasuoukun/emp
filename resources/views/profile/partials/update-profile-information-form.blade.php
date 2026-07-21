@@ -13,9 +13,20 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6" enctype="multipart/form-data">
         @csrf
         @method('patch')
+
+        <!-- Profile Avatar Upload -->
+        <div class="flex items-center gap-4">
+            <img id="avatar-preview" src="{{ $user->avatar_url }}" alt="{{ $user->name }}" class="w-16 h-16 rounded-full object-cover border-2 border-indigo-500 shadow-sm">
+            <div>
+                <x-input-label for="avatar" :value="__('รูปภาพโปรไฟล์')" />
+                <input type="file" id="avatar" name="avatar" accept="image/*" class="mt-1 text-xs text-gray-500 dark:text-gray-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" onchange="if(this.files[0]) document.getElementById('avatar-preview').src = URL.createObjectURL(this.files[0])" />
+                <x-input-error class="mt-1" :messages="$errors->get('avatar')" />
+                <p class="text-[11px] text-gray-500 dark:text-gray-400 mt-1">แนะนำเป็นรูปภาพสี่เหลี่ยมจัตุรัส ขนาดไม่เกิน 4MB (JPG, PNG, WEBP)</p>
+            </div>
+        </div>
 
         <div>
             <x-input-label for="name" :value="__('Name')" />
@@ -45,6 +56,12 @@
                     @endif
                 </div>
             @endif
+        </div>
+
+        <div>
+            <x-input-label for="phone" :value="__('เบอร์โทรศัพท์')" />
+            <x-text-input id="phone" name="phone" type="text" class="mt-1 block w-full" :value="old('phone', $user->phone)" placeholder="0812345678" />
+            <x-input-error class="mt-2" :messages="$errors->get('phone')" />
         </div>
 
         <div class="flex items-center gap-4">

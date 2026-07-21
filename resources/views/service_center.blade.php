@@ -34,7 +34,7 @@
         <div style="background: white; border: 1px solid var(--color-silver); border-radius: 16px; padding: 2.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.03);">
             <h3 style="font-size: 1.4rem; font-weight: 700; color: var(--color-navy-dark); margin-bottom: 1.5rem;">📝 ฟอร์มแจ้งขอเคลม / ซ่อม / ตั้งค่า</h3>
             
-            <form action="{{ route('claims.submit') }}" method="POST">
+            <form action="{{ route('claims.submit') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
@@ -44,7 +44,7 @@
                     </div>
                     <div>
                         <label style="display: block; font-weight: 600; margin-bottom: 5px; color: var(--color-navy-dark); font-size: 0.9rem;">เบอร์โทรศัพท์ติดต่อ</label>
-                        <input type="tel" name="customer_phone" required style="width: 100%; padding: 10px; border: 1px solid var(--color-silver); border-radius: 8px; outline: none;" onfocus="this.style.borderColor='var(--color-navy)'" onblur="this.style.borderColor='var(--color-silver)'">
+                        <input type="tel" name="customer_phone" required value="{{ auth()->check() ? auth()->user()->phone : '' }}" style="width: 100%; padding: 10px; border: 1px solid var(--color-silver); border-radius: 8px; outline: none;" onfocus="this.style.borderColor='var(--color-navy)'" onblur="this.style.borderColor='var(--color-silver)'">
                     </div>
                 </div>
 
@@ -63,24 +63,31 @@
                     <div>
                         <label style="display: block; font-weight: 600; margin-bottom: 5px; color: var(--color-navy-dark); font-size: 0.9rem;">ประเภทบริการ</label>
                         <select name="claim_type" required style="width: 100%; padding: 10px; border: 1px solid var(--color-silver); border-radius: 8px; font-family: inherit; font-size: 0.9rem;">
-                            <option value="warranty">ส่งเคลมประกันศูนย์</option>
-                            <option value="repair">ส่งซ่อมเครื่องมีอาการเสีย</option>
-                            <option value="setting">ตั้งค่า/ลงโปรแกรม/อัปเดต</option>
+                            <option value="repair">🔧 บริการซ่อมของร้าน (ช่างผู้เชี่ยวชาญ)</option>
+                            <option value="warranty">🛡️ บริการเคลมประกันสินค้า</option>
+                            <option value="setting">⚙️ ตั้งค่า/ลงโปรแกรม/อัปเดต</option>
                         </select>
                     </div>
                     <div>
-                        <label style="display: block; font-weight: 600; margin-bottom: 5px; color: var(--color-navy-dark); font-size: 0.9rem;">เลขออเดอร์อ้างอิง (ถ้าซื้อจากเว็บบอร์ด)</label>
+                        <label style="display: block; font-weight: 600; margin-bottom: 5px; color: var(--color-navy-dark); font-size: 0.9rem;">เลขออเดอร์อ้างอิง (ถ้ามี)</label>
                         <input type="text" name="order_id_raw" placeholder="เช่น ORD-..." style="width: 100%; padding: 10px; border: 1px solid var(--color-silver); border-radius: 8px; outline: none;" onfocus="this.style.borderColor='var(--color-navy)'" onblur="this.style.borderColor='var(--color-silver)'">
                     </div>
                 </div>
 
                 <div style="margin-bottom: 1.5rem;">
                     <label style="display: block; font-weight: 600; margin-bottom: 5px; color: var(--color-navy-dark); font-size: 0.9rem;">รายละเอียดปัญหา / อาการเสียที่พบ</label>
-                    <textarea name="issue_description" required rows="4" placeholder="ระบุอาการชำรุด อาการเสีย หรือบริการตั้งค่าที่ต้องการอย่างละเอียด..." style="width: 100%; padding: 10px; border: 1px solid var(--color-silver); border-radius: 8px; outline: none; font-family: inherit;" onfocus="this.style.borderColor='var(--color-navy)'" onblur="this.style.borderColor='var(--color-silver)'"></textarea>
+                    <textarea name="issue_description" required rows="3" placeholder="ระบุอาการชำรุด อาการเสีย หรือบริการตั้งค่าที่ต้องการอย่างละเอียด..." style="width: 100%; padding: 10px; border: 1px solid var(--color-silver); border-radius: 8px; outline: none; font-family: inherit;" onfocus="this.style.borderColor='var(--color-navy)'" onblur="this.style.borderColor='var(--color-silver)'"></textarea>
+                </div>
+
+                <!-- Multi-image Upload Input -->
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; font-weight: 600; margin-bottom: 5px; color: var(--color-navy-dark); font-size: 0.9rem;">📷 แนบรูปถ่ายสภาพตัวเครื่องหรืออาการเสีย (สามารถเลือกได้หลายรูป)</label>
+                    <input type="file" name="images[]" multiple accept="image/*" style="width: 100%; padding: 8px; border: 1px dashed var(--color-silver); border-radius: 8px; background: var(--color-grey-bg); font-size: 0.85rem;">
+                    <span style="font-size: 0.75rem; color: #64748b; display: block; margin-top: 4px;">รองรับไฟล์ PNG, JPG, JPEG, WEBP ขนาดไม่เกิน 4MB ต่อรูป</span>
                 </div>
 
                 <button type="submit" style="background: var(--color-navy-dark); color: white; font-weight: 600; border: none; padding: 12px 25px; border-radius: 8px; width: 100%; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='var(--color-navy)'" onmouseout="this.style.background='var(--color-navy-dark)'">
-                    💾 บันทึกและแจ้งเคลม/ส่งซ่อม
+                    💾 บันทึกและส่งซ่อมของร้าน
                 </button>
             </form>
         </div>

@@ -18,11 +18,19 @@ class ClaimController extends Controller
             'claim_type' => 'required|string|in:warranty,repair,setting',
             'issue_description' => 'required|string',
             'order_id_raw' => 'nullable|string|max:100',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
         ]);
 
         $order = null;
         if (!empty($validated['order_id_raw'])) {
             $order = Order::find($validated['order_id_raw']);
+        }
+
+        $imagePaths = [];
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $file) {
+                $imagePaths[] = $file->store('claims', 'public');
+            }
         }
 
         $claim = Claim::create([
@@ -34,11 +42,12 @@ class ClaimController extends Controller
             'serial_number' => $validated['serial_number'],
             'claim_type' => $validated['claim_type'],
             'issue_description' => $validated['issue_description'],
+            'image_paths' => $imagePaths,
             'status' => 'pending',
         ]);
 
         return redirect()->route('tracking', ['q' => $claim->id, 'type' => 'claim'])
-            ->with('sweet_success', "แจ้งเคลม/ส่งซ่อมสำเร็จ! หมายเลขงานของท่านคือ: {$claim->id} สามารถใช้ติดตามสถานะได้ทันที");
+            ->with('sweet_success', "แจ้งส่งซ่อมของร้านสำเร็จ! หมายเลขงานของท่านคือ: {$claim->id} สามารถใช้ติดตามสถานะได้ทันที");
     }
 
     public function track(Request $request)

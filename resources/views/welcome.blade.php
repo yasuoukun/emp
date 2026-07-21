@@ -186,41 +186,53 @@
         @endforelse
     </div>
 
-
-    <!-- Categories Grid -->
+          <!-- Categories Grid -->
     <div style="text-align: center; margin-bottom: 1.75rem;">
         <span style="display: inline-block; background: rgba(99, 102, 241, 0.08); color: #6366f1; padding: 4px 14px; border-radius: 99px; font-size: 0.8rem; font-weight: 600; margin-bottom: 0.75rem;">CATEGORIES</span>
-        <h2 style="font-size: 1.75rem; font-weight: 800; color: var(--color-navy-dark); letter-spacing: -0.02em;">
-            หมวดหมู่ยอดนิยม
+        <h2 style="font-size: 1.75rem; font-weight: 800; color: var(--color-navy-dark); letter-spacing: -0.02em; margin: 0;">
+            หมวดหมู่สินค้ายอดนิยม
         </h2>
     </div>
     @php 
-        $catIcons = ['📱', '🖥️', '⌚', '🎧', '📸', '🎮']; 
+        $catFaIcons = [
+            'fa-mobile-screen-button',
+            'fa-laptop',
+            'fa-stopwatch',
+            'fa-headphones',
+            'fa-camera',
+            'fa-gamepad',
+            'fa-tablet-screen-button',
+            'fa-desktop'
+        ]; 
         $catGradients = [
-            'linear-gradient(135deg, #FF5722, #FF8A00)', // Shopee Orange
-            'linear-gradient(135deg, #FF007F, #EC4899)', // Lazada Pink/Rose
-            'linear-gradient(135deg, #06B6D4, #3B82F6)', // Cyan/Blue
-            'linear-gradient(135deg, #8B5CF6, #6366F1)', // Purple/Indigo
-            'linear-gradient(135deg, #10B981, #059669)', // Emerald/Green
-            'linear-gradient(135deg, #F59E0B, #D97706)', // Gold/Amber
+            'linear-gradient(135deg, #FF5722, #FF8A00)',
+            'linear-gradient(135deg, #FF007F, #EC4899)',
+            'linear-gradient(135deg, #06B6D4, #3B82F6)',
+            'linear-gradient(135deg, #8B5CF6, #6366F1)',
+            'linear-gradient(135deg, #10B981, #059669)',
+            'linear-gradient(135deg, #F59E0B, #D97706)',
+            'linear-gradient(135deg, #EC4899, #8B5CF6)',
+            'linear-gradient(135deg, #3B82F6, #1D4ED8)'
         ];
         $catShadows = [
-            'rgba(255, 87, 34, 0.3)',
-            'rgba(255, 0, 127, 0.3)',
-            'rgba(6, 182, 212, 0.3)',
-            'rgba(139, 92, 246, 0.3)',
-            'rgba(16, 185, 129, 0.3)',
-            'rgba(245, 158, 11, 0.3)',
+            'rgba(255, 87, 34, 0.25)',
+            'rgba(255, 0, 127, 0.25)',
+            'rgba(6, 182, 212, 0.25)',
+            'rgba(139, 92, 246, 0.25)',
+            'rgba(16, 185, 129, 0.25)',
+            'rgba(245, 158, 11, 0.25)',
+            'rgba(236, 72, 153, 0.25)',
+            'rgba(59, 130, 246, 0.25)'
         ];
     @endphp
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; margin-bottom: 4.5rem;">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 3.5rem;">
         @foreach($categories as $idx => $category)
         <a href="{{ route('products.index', ['category' => $category->id]) }}" style="text-decoration: none;">
-            <div class="hover-scale" style="background: white; border: 1px solid rgba(226, 232, 240, 0.7); border-radius: 20px; padding: 2rem 1.5rem; text-align: center; cursor: pointer; box-shadow: 0 4px 15px rgba(27, 42, 71, 0.02);">
-                <div style="width: 60px; height: 60px; background: {{ $catGradients[$idx % count($catGradients)] }}; border-radius: 18px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem; font-size: 1.8rem; box-shadow: 0 8px 20px {{ $catShadows[$idx % count($catShadows)] }};">
-                    {{ $catIcons[$idx % count($catIcons)] }}
+            <div class="hover-scale" style="background: white; border: 1px solid rgba(226, 232, 240, 0.8); border-radius: 18px; padding: 1.5rem 1rem; text-align: center; cursor: pointer; box-shadow: 0 4px 12px rgba(27, 42, 71, 0.03); height: 140px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <div style="width: 50px; height: 50px; background: {{ $catGradients[$idx % count($catGradients)] }}; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.85rem; color: white; font-size: 1.35rem; box-shadow: 0 6px 16px {{ $catShadows[$idx % count($catShadows)] }};">
+                    <i class="fa-solid {{ $catFaIcons[$idx % count($catFaIcons)] }}"></i>
                 </div>
-                <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--color-navy); margin: 0;">{{ $category->name }}</h3>
+                <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--color-navy); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">{{ $category->name }}</h3>
             </div>
         </a>
         @endforeach

@@ -23,6 +23,7 @@ class ClaimController extends Controller
     {
         $validated = $request->validate([
             'status' => 'required|string|in:pending,received,in_progress,completed,cancelled',
+            'estimated_cost' => 'nullable|numeric|min:0',
             'admin_notes' => 'nullable|string',
         ]);
 

@@ -30,44 +30,77 @@
         </div>
         
         <!-- Messages Area -->
-        <div id="chat-widget-messages" style="position: absolute; top: 72px; bottom: 64px; left: 0; right: 0; padding: 16px; overflow-y: auto; background: #F8FAFC; display: flex; flex-direction: column; gap: 12px; z-index: 1;">
-            <div style="text-align: center; margin-bottom: 8px;">
+        <div id="chat-widget-messages" style="position: absolute; top: 72px; bottom: 64px; left: 0; right: 0; padding: 16px; overflow-y: auto; background: #F8FAFC; z-index: 1;">
+            <div style="text-align: center; margin-bottom: 14px;">
                 <span style="background: rgba(27, 42, 71, 0.05); color: #64748B; font-size: 0.72rem; padding: 4px 12px; border-radius: 12px; font-weight: 500;">
                     เริ่มต้นการสนทนา
                 </span>
             </div>
             
             <template x-for="msg in messages" :key="msg.id">
-                <div :style="msg.sender_id === userId ? 'align-self: flex-end;' : 'align-self: flex-start;'" 
-                     style="display: flex; flex-direction: column; max-width: 80%; gap: 3px;">
-                    <div :style="msg.sender_id === userId 
-                        ? 'background: linear-gradient(135deg, #1B2A47, #2A3E5C); color: white; border-radius: 16px 16px 4px 16px; box-shadow: 0 2px 8px rgba(27,42,71,0.15);' 
-                        : 'background: white; color: #1B2A47; border-radius: 16px 16px 16px 4px; border: 1px solid #e2e8f0; box-shadow: 0 1px 4px rgba(0,0,0,0.04);'" 
-                          style="padding: 10px 14px; font-size: 0.85rem; line-height: 1.5;">
-                        <span x-text="msg.content"></span>
+                <div :style="msg.sender_id == userId ? 'width: 100%; display: flex; flex-direction: column; align-items: flex-end; margin-bottom: 10px;' : 'width: 100%; display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 10px;'">
+                    <div :style="msg.sender_id == userId 
+                        ? 'background: #0084FF; color: #ffffff; border-radius: 18px 18px 4px 18px; box-shadow: 0 2px 6px rgba(0, 132, 255, 0.25);' 
+                        : 'background: #E4E6EB; color: #050505; border-radius: 18px 18px 18px 4px; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);'" 
+                          style="padding: 12px 18px; font-size: 0.95rem; line-height: 1.5; font-weight: 500; width: max-content; max-width: 80%; min-width: 32px; word-break: break-word; overflow-wrap: break-word; text-align: left; box-sizing: border-box;">
+                        
+                        <!-- Media Attachments -->
+                        <template x-if="msg.attachment_path">
+                            <div style="margin-bottom: 6px;">
+                                <template x-if="msg.attachment_type === 'image'">
+                                    <a :href="'/storage/' + msg.attachment_path" target="_blank">
+                                        <img :src="'/storage/' + msg.attachment_path" style="max-width: 100%; max-height: 180px; border-radius: 12px; display: block; object-fit: cover;">
+                                    </a>
+                                </template>
+                                <template x-if="msg.attachment_type === 'video'">
+                                    <video :src="'/storage/' + msg.attachment_path" controls style="max-width: 100%; max-height: 180px; border-radius: 12px; display: block;"></video>
+                                </template>
+                                <template x-if="msg.attachment_type === 'file'">
+                                    <a :href="'/storage/' + msg.attachment_path" target="_blank" style="color: inherit; font-weight: 600; text-decoration: underline;">📎 ดาวน์โหลดไฟล์แนบ</a>
+                                </template>
+                            </div>
+                        </template>
+
+                        <span x-show="msg.content" x-text="msg.content"></span>
                     </div>
-                    <span :style="msg.sender_id === userId ? 'text-align: right;' : 'text-align: left;'" 
-                          style="font-size: 0.68rem; color: #94A3B8;" 
-                          x-text="new Date(msg.created_at).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })">
-                    </span>
+                    <div :style="msg.sender_id == userId ? 'text-align: right;' : 'text-align: left;'" 
+                         style="font-size: 0.68rem; color: #8A8D91; padding: 2px 6px 0; font-weight: 400;">
+                        <span x-text="new Date(msg.created_at).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })"></span>
+                    </div>
                 </div>
+            </template>
+        </div>
+
+        <!-- Emoji Picker Popover -->
+        <div x-show="showEmojis" @click.away="showEmojis = false" x-cloak style="position: absolute; bottom: 68px; left: 16px; right: 16px; background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 8px 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: flex; gap: 8px; flex-wrap: wrap; z-index: 20;">
+            <template x-for="emoji in ['😊', '👍', '🔥', '📱', '📦', '💻', '🙏', '❤️', '✅', '⚡']">
+                <button type="button" @click="newMessage += emoji; showEmojis = false" style="font-size: 1.3rem; background: none; border: none; cursor: pointer; padding: 4px; border-radius: 6px;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='none'" x-text="emoji"></button>
             </template>
         </div>
         
         <!-- Input Area -->
-        <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 64px; box-sizing: border-box; padding: 12px 16px; border-top: 1px solid #e2e8f0; background: white; display: flex; gap: 8px; align-items: center; z-index: 10;">
+        <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 64px; box-sizing: border-box; padding: 12px 12px; border-top: 1px solid #e2e8f0; background: white; display: flex; gap: 6px; align-items: center; z-index: 10;">
+            <!-- File Upload Button -->
+            <input type="file" id="chat-file-input" @change="handleFileUpload($event)" accept="image/*,video/*" style="display: none;">
+            <button type="button" @click="document.getElementById('chat-file-input').click()" style="background: #f1f5f9; color: #475569; border: none; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="แนบรูป/วิดีโอ">
+                📷
+            </button>
+
+            <!-- Emoji Toggle Button -->
+            <button type="button" @click="showEmojis = !showEmojis" style="background: #f1f5f9; color: #475569; border: none; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="ใส่อิโมจิ">
+                😀
+            </button>
+
             <input type="text" x-model="newMessage" 
                    @keydown.enter="sendMessage()"
-                   placeholder="พิมพ์ข้อความที่นี่..." 
-                   style="flex: 1; padding: 10px 16px; border: 1.5px solid #e2e8f0; border-radius: 24px; outline: none; font-size: 0.85rem; font-family: 'Prompt', sans-serif; transition: all 0.2s; background: #F8FAFC;"
-                   onfocus="this.style.borderColor='#1B2A47'; this.style.background='white'; this.style.boxShadow='0 0 0 3px rgba(27,42,71,0.06)';"
-                   onblur="this.style.borderColor='#e2e8f0'; this.style.background='#F8FAFC'; this.style.boxShadow='none';">
+                   placeholder="พิมพ์ข้อความ..." 
+                   style="flex: 1; padding: 8px 12px; border: 1.5px solid #e2e8f0; border-radius: 20px; outline: none; font-size: 0.85rem; font-family: 'Prompt', sans-serif; transition: all 0.2s; background: #F8FAFC;"
+                   onfocus="this.style.borderColor='#1B2A47'; this.style.background='white';"
+                   onblur="this.style.borderColor='#e2e8f0'; this.style.background='#F8FAFC';">
             
             <button @click="sendMessage()" 
-                    style="background: linear-gradient(135deg, #1B2A47, #2A3E5C); color: white; border: none; border-radius: 50%; width: 40px; height: 40px; min-width: 40px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(27,42,71,0.2); transition: transform 0.2s;"
-                    onmouseover="this.style.transform='scale(1.08)'"
-                    onmouseout="this.style.transform='scale(1)'">
-                <i class="fa-solid fa-paper-plane" style="font-size: 0.9rem;"></i>
+                    style="background: linear-gradient(135deg, #1B2A47, #2A3E5C); color: white; border: none; border-radius: 50%; width: 36px; height: 36px; min-width: 36px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(27,42,71,0.2);">
+                <i class="fa-solid fa-paper-plane" style="font-size: 0.85rem;"></i>
             </button>
         </div>
     </div>
@@ -89,6 +122,7 @@
 function chatWidget() {
     return {
         open: false,
+        showEmojis: false,
         messages: [],
         newMessage: '',
         userId: {{ auth()->id() }},
@@ -167,6 +201,30 @@ function chatWidget() {
                     el.style.display = 'none';
                 }
             });
+        },
+        handleFileUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('attachment', file);
+            formData.append('content', this.newMessage);
+
+            fetch('/messages', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                this.messages.push(data);
+                this.newMessage = '';
+                e.target.value = '';
+                this.scrollDown();
+            })
+            .catch(err => console.error(err));
         },
         sendMessage() {
             if (this.newMessage.trim() === '') return;

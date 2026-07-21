@@ -41,14 +41,37 @@ class MessageController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'content' => 'required|string',
-            'receiver_id' => 'nullable|integer'
+            'content' => 'nullable|string',
+            'receiver_id' => 'nullable|integer',
+            'attachment' => 'nullable|file|mimes:jpeg,png,jpg,gif,webp,mp4,webm,mov,pdf|max:10240'
         ]);
+
+        if (empty($request->content) && !$request->hasFile('attachment')) {
+            return response()->json(['error' => 'กรุณากรอกข้อความหรือเลือกไฟล์แนบ'], 422);
+        }
+
+        $attachmentPath = null;
+        $attachmentType = null;
+
+        if ($request->hasFile('attachment')) {
+            $file = $request->file('attachment');
+            $attachmentPath = $file->store('chat_attachments', 'public');
+            $mime = $file->getMimeType();
+            if (str_starts_with($mime, 'image/')) {
+                $attachmentType = 'image';
+            } elseif (str_starts_with($mime, 'video/')) {
+                $attachmentType = 'video';
+            } else {
+                $attachmentType = 'file';
+            }
+        }
 
         $message = Message::create([
             'sender_id' => auth()->id(),
-            'receiver_id' => $request->receiver_id, // Null means it's sent to admin group
-            'content' => $request->content,
+            'receiver_id' => $request->receiver_id,
+            'content' => $request->content ?? '',
+            'attachment_path' => $attachmentPath,
+            'attachment_type' => $attachmentType,
         ]);
 
         broadcast(new MessageSent($message))->toOthers();

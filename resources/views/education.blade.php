@@ -17,19 +17,46 @@
         </p>
     </div>
 
-    <!-- Intro Grid -->
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; margin-bottom: 5rem;">
-        <div>
-            <h2 style="font-size: 2.2rem; font-weight: 700; color: var(--color-navy-dark); margin-bottom: 1.5rem; position: relative;">
-                ทำไมต้อง Apple ในด้านการศึกษา?
-                <span style="display: block; width: 60px; height: 4px; background: var(--color-accent); margin-top: 10px; border-radius: 2px;"></span>
-            </h2>
-            <p style="color: var(--color-grey); font-size: 1.05rem; line-height: 1.8; margin-bottom: 1.5rem;">
-                เราอาจคุ้นเคยกับผลิตภัณฑ์ยอดเยี่ยมของ Apple เช่น iPad และ Mac ที่ออกแบบมาอย่างดีและผู้คนใช้งานในชีวิตประจำวันอยู่เสมอ แต่สิ่งที่คุณอาจยังไม่ทราบ คือ Apple ยังออกแบบผลิตภัณฑ์พร้อมแนวคิดเพื่อการศึกษาด้วย ทั้งยังมีแอป ฟีเจอร์และระบบการจัดการอุปกรณ์ที่ทรงพลัง ซึ่งออกแบบมาโดยเฉพาะเพื่อการเรียนการสอนในห้องเรียน
-            </p>
+    <!-- Video & Image Showcase -->
+    <div style="margin-bottom: 5rem;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; align-items: center; margin-bottom: 3rem;">
+            <div>
+                <h2 style="font-size: 2.2rem; font-weight: 700; color: var(--color-navy-dark); margin-bottom: 1.2rem; position: relative;">
+                    ทำไมต้อง Apple ในด้านการศึกษา?
+                    <span style="display: block; width: 60px; height: 4px; background: var(--color-accent); margin-top: 10px; border-radius: 2px;"></span>
+                </h2>
+                <p style="color: var(--color-grey); font-size: 1.05rem; line-height: 1.8; margin-bottom: 1.5rem;">
+                    เราอาจคุ้นเคยกับผลิตภัณฑ์ยอดเยี่ยมของ Apple เช่น iPad และ Mac ที่ออกแบบมาอย่างดีและผู้คนใช้งานในชีวิตประจำวันอยู่เสมอ แต่สิ่งที่คุณอาจยังไม่ทราบ คือ Apple ยังออกแบบผลิตภัณฑ์พร้อมแนวคิดเพื่อการศึกษาด้วย ทั้งยังมีแอป ฟีเจอร์และระบบการจัดการอุปกรณ์ที่ทรงพลัง ซึ่งออกแบบมาโดยเฉพาะเพื่อการเรียนการสอนในห้องเรียน
+                </p>
+                <div style="display: flex; gap: 15px;">
+                    <div style="background: white; border: 1px solid var(--color-silver); padding: 1rem 1.5rem; border-radius: 16px; flex: 1;">
+                        <h4 style="margin: 0; font-size: 1.4rem; font-weight: 800; color: var(--color-accent);">100%</h4>
+                        <p style="margin: 4px 0 0; font-size: 0.85rem; color: var(--color-grey);">รองรับระบบการเรียนการสอนออนไลน์</p>
+                    </div>
+                    <div style="background: white; border: 1px solid var(--color-silver); padding: 1rem 1.5rem; border-radius: 16px; flex: 1;">
+                        <h4 style="margin: 0; font-size: 1.4rem; font-weight: 800; color: #059669;">Zero-Touch</h4>
+                        <p style="margin: 4px 0 0; font-size: 0.85rem; color: var(--color-grey);">กระจายแอปผ่าน Apple School Manager</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Embedded Video Player -->
+            <div style="position: relative; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.12); border: 2px solid var(--color-silver-light); background: #000; aspect-ratio: 16/9;">
+                <iframe width="100%" height="100%" src="https://www.youtube.com/embed/WJ_p-i10n4Q" title="Apple Education Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            </div>
         </div>
-        <div style="position: relative;">
-            <img src="https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&q=80&w=600" alt="Apple Education" style="width: 100%; border-radius: 20px; box-shadow: 0 15px 30px rgba(0,0,0,0.08);">
+
+        <!-- Photo Gallery Grid -->
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
+            <div style="border-radius: 16px; overflow: hidden; height: 200px; shadow: 0 4px 15px rgba(0,0,0,0.05);">
+                <img src="https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&q=80&w=600" alt="Education iPad" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            </div>
+            <div style="border-radius: 16px; overflow: hidden; height: 200px; shadow: 0 4px 15px rgba(0,0,0,0.05);">
+                <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&q=80&w=600" alt="Digital Classroom" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            </div>
+            <div style="border-radius: 16px; overflow: hidden; height: 200px; shadow: 0 4px 15px rgba(0,0,0,0.05);">
+                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=600" alt="Students Working" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            </div>
         </div>
     </div>
 

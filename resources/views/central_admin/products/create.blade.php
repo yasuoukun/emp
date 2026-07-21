@@ -7,21 +7,43 @@
     </x-slot>
 
     <div class="py-8 bg-gray-50/50 min-h-screen">
-        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
+            @if($errors->any())
+            <div class="mb-6 p-4 bg-rose-50 border-l-4 border-rose-500 text-rose-800 rounded-r-xl shadow-sm">
+                <div class="font-bold flex items-center gap-2 mb-1">
+                    <i class="fa-solid fa-triangle-exclamation text-rose-500"></i> กรอกข้อมูลไม่ถูกต้องตามระเบียบ:
+                </div>
+                <ul class="list-disc list-inside text-xs space-y-1">
+                    @foreach($errors->all() as $err)
+                        <li>{{ $err }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
+
             <div class="bg-white overflow-hidden shadow-sm rounded-3xl border border-gray-100 p-8">
                 
                 <form action="{{ route('central_admin.products.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        <div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                        <div class="md:col-span-2">
                             <label class="block text-sm font-bold text-slate-700 mb-2">ชื่อสินค้า</label>
                             <input type="text" name="name" value="{{ old('name') }}" class="mt-1 block w-full rounded-xl border-gray-200 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="เช่น iPhone 15 Pro Max" required>
                         </div>
                         <div>
-                            <label class="block text-sm font-bold text-slate-700 mb-2">สต็อก (จำนวนคงเหลือ)</label>
-                            <input type="number" name="stock" value="{{ old('stock', 0) }}" class="mt-1 block w-full rounded-xl border-gray-200 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required min="0">
+                            <div class="flex items-center justify-between mb-2">
+                                <label class="block text-sm font-bold text-slate-700">รหัสสินค้า / SKU</label>
+                                <button type="button" onclick="autoGenerateSku()" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 bg-indigo-50 px-2.5 py-1 rounded-lg hover:bg-indigo-100 transition">
+                                    <i class="fa-solid fa-bolt text-amber-500"></i> สุ่ม SKU อัตโนมัติ
+                                </button>
+                            </div>
+                            <input type="text" id="sku-input" name="sku" value="{{ old('sku') }}" class="mt-1 block w-full rounded-xl border-gray-200 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="ปล่อยว่างไว้เพื่อสร้างรหัสอัตโนมัติ (เช่น APL-MOB-2026-X8K2P)">
+                            <p class="text-[11px] text-gray-400 mt-1">* หากเว้นว่างไว้ ระบบจะสร้างรหัส SKU มาตรฐานให้อัตโนมัติเมื่อกดบันทึก</p>
                         </div>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-sm font-bold text-slate-700 mb-2">สต็อก (จำนวนคงเหลือ)</label>
+                        <input type="number" name="stock" value="{{ old('stock', 0) }}" class="mt-1 block w-full rounded-xl border-gray-200 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required min="0">
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -116,4 +138,23 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function autoGenerateSku() {
+            const brandId = document.querySelector('select[name="brand_id"]')?.value || '';
+            const catId = document.querySelector('select[name="category_id"]')?.value || '';
+            const input = document.getElementById('sku-input');
+            
+            fetch(`/central-admin/products/generate-sku?brand_id=${brandId}&category_id=${catId}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.sku) {
+                        input.value = data.sku;
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        }
+    </script>
 </x-app-layout>

@@ -20,9 +20,6 @@ class ProductController extends Controller
 
     public function create()
     {
-        if (auth()->user()->role !== 'super_admin') {
-            abort(403, 'เฉพาะแอดมินกลาง (Super Admin) เท่านั้นที่สามารถเพิ่มสินค้าใหม่ได้');
-        }
         $categories = Category::all();
         $brands = Brand::all();
         return view('central_admin.products.create', compact('categories', 'brands'));
@@ -30,18 +27,16 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        if (auth()->user()->role !== 'super_admin') {
-            abort(403, 'เฉพาะแอดมินกลาง (Super Admin) เท่านั้นที่สามารถเพิ่มสินค้าใหม่ได้');
-        }
         $validated = $request->validate([
             'category_id' => 'required|exists:categories,id',
             'brand_id' => 'required|exists:brands,id',
             'name' => 'required|string|max:255',
+            'sku' => 'nullable|string|max:100',
             'description' => 'nullable|string',
             'specifications' => 'nullable|string',
             'freebie' => 'nullable|string|max:255',
             'price' => 'required|numeric|min:0',
-            'discount_price' => 'nullable|numeric|min:0|lt:price',
+            'discount_price' => 'nullable|numeric|min:0',
             'stock' => 'required|integer|min:0',
             'images' => 'nullable|array',
             'images.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048'
@@ -49,6 +44,11 @@ class ProductController extends Controller
 
         $validatedData = $validated;
         unset($validatedData['images']);
+
+        if (empty($validatedData['sku'])) {
+            $validatedData['sku'] = Product::generateSku($validatedData['brand_id'] ?? null, $validatedData['category_id'] ?? null);
+        }
+
         $product = Product::create($validatedData);
 
         if ($request->hasFile('images')) {
@@ -65,6 +65,14 @@ class ProductController extends Controller
         return redirect()->route('central_admin.products.index')->with('success', 'เพิ่มสินค้าเรียบร้อยแล้ว');
     }
 
+    public function generateSkuAjax(Request $request)
+    {
+        $brandId = $request->query('brand_id');
+        $categoryId = $request->query('category_id');
+        $sku = Product::generateSku($brandId, $categoryId);
+        return response()->json(['sku' => $sku]);
+    }
+
     public function edit(Product $product)
     {
         $categories = Category::all();
@@ -79,11 +87,12 @@ class ProductController extends Controller
             'category_id' => 'required|exists:categories,id',
             'brand_id' => 'required|exists:brands,id',
             'name' => 'required|string|max:255',
+            'sku' => 'nullable|string|max:100',
             'description' => 'nullable|string',
             'specifications' => 'nullable|string',
             'freebie' => 'nullable|string|max:255',
             'price' => 'required|numeric|min:0',
-            'discount_price' => 'nullable|numeric|min:0|lt:price',
+            'discount_price' => 'nullable|numeric|min:0',
             'stock' => 'required|integer|min:0',
             'images' => 'nullable|array',
             'images.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048'

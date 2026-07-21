@@ -26,6 +26,7 @@ Route::get('/products/{product}', [\App\Http\Controllers\ProductController::clas
 Route::get('/promotions', function () {
     $coupons = \App\Models\Coupon::where('expires_at', '>=', now()->toDateTimeString())->orderBy('discount_amount', 'desc')->get();
     $collectedCouponIds = auth()->check() ? \App\Models\CollectedCoupon::where('user_id', auth()->id())->pluck('coupon_id')->toArray() : [];
+    $banners = \App\Models\PromotionalBanner::where('is_active', true)->orderBy('sort_order')->get();
     
     // Get products with active discounts
     $discountedProducts = \App\Models\Product::with('images')
@@ -35,7 +36,7 @@ Route::get('/promotions', function () {
         ->take(12)
         ->get();
         
-    return view('promotions.index', compact('coupons', 'collectedCouponIds', 'discountedProducts'));
+    return view('promotions.index', compact('coupons', 'collectedCouponIds', 'discountedProducts', 'banners'));
 })->name('promotions.index');
 
 Route::post('/promotions/collect/{coupon}', function (\App\Models\Coupon $coupon) {
@@ -138,7 +139,8 @@ Route::middleware(['auth', 'role:customer'])->prefix('customer')->name('customer
             ->get();
         $paymentMethods = \App\Models\UserPaymentMethod::where('user_id', auth()->id())->get();
         $quotations = \App\Models\Quotation::where('user_id', auth()->id())->orderBy('created_at', 'desc')->get();
-        return view('dashboard', compact('orders', 'addresses', 'wishlists', 'collectedCoupons', 'paymentMethods', 'quotations'));
+        $claims = \App\Models\Claim::where('user_id', auth()->id())->orderBy('created_at', 'desc')->get();
+        return view('dashboard', compact('orders', 'addresses', 'wishlists', 'collectedCoupons', 'paymentMethods', 'quotations', 'claims'));
     })->name('dashboard');
     
     Route::post('/addresses', [\App\Http\Controllers\AddressController::class, 'store'])->name('addresses.store');
@@ -175,9 +177,12 @@ Route::middleware(['auth', 'role:admin,super_admin'])->prefix('admin')->name('ad
                     ->where('receiver_id', '!=', auth()->id())
                     ->pluck('receiver_id')
             )
+            ->merge(
+                \App\Models\User::where('role', 'customer')->where('id', '!=', auth()->id())->pluck('id')
+            )
             ->unique();
             
-        $users = \App\Models\User::whereIn('id', $userIds)->where('role', 'customer')->get();
+        $users = \App\Models\User::whereIn('id', $userIds)->where('id', '!=', auth()->id())->get();
         return view('admin.chats.index', compact('users'));
     })->name('chats.index');
 
@@ -193,9 +198,12 @@ Route::middleware(['auth', 'role:admin,super_admin'])->prefix('admin')->name('ad
                     ->where('receiver_id', '!=', auth()->id())
                     ->pluck('receiver_id')
             )
+            ->merge(
+                \App\Models\User::where('role', 'customer')->where('id', '!=', auth()->id())->pluck('id')
+            )
             ->unique();
             
-        $users = \App\Models\User::whereIn('id', $userIds)->where('role', 'customer')->get();
+        $users = \App\Models\User::whereIn('id', $userIds)->where('id', '!=', auth()->id())->get();
         
         // Add unread count and last message details per user
         $users->each(function($user) {
@@ -248,6 +256,7 @@ Route::middleware(['auth', 'role:admin,super_admin'])->prefix('central-admin')->
     Route::get('/dashboard', [\App\Http\Controllers\Admin\CentralAdminDashboardController::class, 'index'])->name('dashboard');
     Route::post('/images/{image}/primary', [\App\Http\Controllers\Admin\ProductController::class, 'setImagePrimary'])->name('products.images.primary');
     Route::delete('/images/{image}', [\App\Http\Controllers\Admin\ProductController::class, 'deleteImage'])->name('products.images.delete');
+    Route::get('/products/generate-sku', [\App\Http\Controllers\Admin\ProductController::class, 'generateSkuAjax'])->name('products.generate_sku');
     Route::resource('products', \App\Http\Controllers\Admin\ProductController::class);
     Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
     Route::resource('brands', \App\Http\Controllers\Admin\BrandController::class);
@@ -263,6 +272,13 @@ Route::middleware(['auth', 'role:admin,super_admin'])->prefix('central-admin')->
 
     Route::get('/notifications', [\App\Http\Controllers\Admin\NotificationController::class, 'index'])->name('notifications.index');
     Route::post('/notifications/send', [\App\Http\Controllers\Admin\NotificationController::class, 'send'])->name('notifications.send');
+
+    // Super Admin User Management
+    Route::get('/users', [\App\Http\Controllers\Admin\UserController::class, 'index'])->name('users.index');
+    Route::post('/users', [\App\Http\Controllers\Admin\UserController::class, 'store'])->name('users.store');
+    Route::patch('/users/{user}/role', [\App\Http\Controllers\Admin\UserController::class, 'updateRole'])->name('users.update_role');
+    Route::patch('/users/{user}/status', [\App\Http\Controllers\Admin\UserController::class, 'toggleStatus'])->name('users.toggle_status');
+    Route::delete('/users/{user}', [\App\Http\Controllers\Admin\UserController::class, 'destroy'])->name('users.destroy');
 });
 
 Route::middleware('auth')->group(function () {

@@ -30,14 +30,19 @@
         <!-- Right Column: Product Specs -->
         <div style="display: flex; flex-direction: column; justify-content: space-between;">
             <div>
-                <!-- Brand & Category badges -->
-                <div style="display: flex; gap: 10px; margin-bottom: 1rem;">
+                <!-- Brand & Category & SKU badges -->
+                <div style="display: flex; gap: 10px; margin-bottom: 1rem; flex-wrap: wrap;">
                     <span style="background: var(--color-silver-light); color: var(--color-navy); padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">
                         แบรนด์: {{ $product->brand->name ?? 'ทั่วไป' }}
                     </span>
                     <span style="background: rgba(49, 130, 206, 0.1); color: var(--color-accent); padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">
                         หมวดหมู่: {{ $product->category->name ?? 'ทั่วไป' }}
                     </span>
+                    @if($product->sku)
+                    <span style="background: #F1F5F9; color: #475569; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; font-family: monospace;">
+                        SKU: {{ $product->sku }}
+                    </span>
+                    @endif
                 </div>
 
                 <!-- Product Name -->
@@ -150,12 +155,6 @@
                     <i class="fa-brands fa-line" style="font-size: 1.4rem;"></i> สอบถามรายละเอียดเพิ่มเติมผ่าน LINE
                 </a>
             </div>
-        </div>pointer; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; transition: all 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.02);" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
-                        {{ $isFavorite ? '❤️' : '🤍' }}
-                    </button>
-                </div>
-            </div>
-
         </div>
 
     </div>
@@ -170,7 +169,7 @@
         @auth
         <div style="background: var(--color-grey-bg); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; border: 1px dashed var(--color-silver);">
             <h3 style="font-size: 1.1rem; color: var(--color-navy-dark); font-weight: 700; margin: 0 0 1rem;">✍️ เขียนรีวิวสินค้าของคุณ</h3>
-            <form action="{{ route('reviews.store') }}" method="POST">
+            <form action="{{ route('reviews.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" name="product_id" value="{{ $product->id }}">
                 
@@ -189,6 +188,11 @@
                 <div style="margin-bottom: 1rem;">
                     <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--color-navy-dark);">ความคิดเห็นของคุณ:</label>
                     <textarea name="comment" rows="3" placeholder="ระบุรายละเอียดความคิดเห็นเกี่ยวกับสินค้า..." style="width: 100%; padding: 10px; border: 1px solid var(--color-silver); border-radius: 8px; outline: none;" required></textarea>
+                </div>
+
+                <div style="margin-bottom: 1.25rem;">
+                    <label style="display: block; font-weight: 600; margin-bottom: 0.35rem; color: var(--color-navy-dark); font-size: 0.9rem;">📷 แนบรูปภาพ / วิดีโอรีวิวสินค้าประกอบการใช้งาน:</label>
+                    <input type="file" name="media[]" multiple accept="image/*,video/*" style="font-size: 0.85rem; color: var(--color-grey);">
                 </div>
 
                 <button type="submit" style="background: var(--color-navy); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='var(--color-navy-light)'" onmouseout="this.style.background='var(--color-navy)'">ส่งรีวิว</button>
@@ -215,9 +219,24 @@
                         @endfor
                     </div>
                 </div>
-                <p style="margin: 0; color: var(--color-navy-dark); font-size: 1rem; line-height: 1.5;">
+                <p style="margin: 0 0 10px; color: var(--color-navy-dark); font-size: 1rem; line-height: 1.5;">
                     {{ $review->comment }}
                 </p>
+
+                <!-- Render Review Media -->
+                @if(!empty($review->media_paths) && count($review->media_paths) > 0)
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px;">
+                    @foreach($review->media_paths as $m)
+                        @if(str_contains(strtolower($m), '.mp4') || str_contains(strtolower($m), '.mov'))
+                            <video src="{{ Storage::url($m) }}" controls style="height: 100px; border-radius: 8px; border: 1px solid var(--color-silver);"></video>
+                        @else
+                            <a href="{{ Storage::url($m) }}" target="_blank">
+                                <img src="{{ Storage::url($m) }}" style="height: 90px; width: 90px; object-fit: cover; border-radius: 8px; border: 1px solid var(--color-silver);">
+                            </a>
+                        @endif
+                    @endforeach
+                </div>
+                @endif
             </div>
             @empty
             <p style="color: var(--color-grey); text-align: center; padding: 2rem 0; font-style: italic;">ยังไม่มีรีวิวสำหรับสินค้าชิ้นนี้ มาร่วมเป็นคนแรกที่รีวิวกันเถอะ!</p>

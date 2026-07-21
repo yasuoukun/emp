@@ -67,6 +67,20 @@
                                 {{ $claim->issue_description }}
                             </div>
                         </div>
+
+                        <!-- Uploaded Device Photos -->
+                        @if(!empty($claim->image_paths) && count($claim->image_paths) > 0)
+                        <div class="pt-4 border-t">
+                            <span class="text-gray-600 text-xs font-bold block mb-2">📷 รูปถ่ายตัวเครื่องหรืออาการเสียจากลูกค้า:</span>
+                            <div class="grid grid-cols-3 sm:grid-cols-4 gap-3">
+                                @foreach($claim->image_paths as $img)
+                                <a href="{{ Storage::url($img) }}" target="_blank" class="block border rounded-xl overflow-hidden aspect-square bg-gray-100 hover:opacity-80 transition">
+                                    <img src="{{ Storage::url($img) }}" alt="Device Photo" class="w-full h-full object-cover">
+                                </a>
+                                @endforeach
+                            </div>
+                        </div>
+                        @endif
                     </div>
                 </div>
 
@@ -90,8 +104,14 @@
                         </div>
 
                         <div>
+                            <label class="block text-sm font-semibold text-gray-600 mb-2">💰 ค่าซ่อมเบื้องต้น (บาท):</label>
+                            <input type="number" step="0.01" name="estimated_cost" value="{{ $claim->estimated_cost }}" placeholder="เช่น 1500" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-indigo-200">
+                            <span class="text-xs text-gray-400 mt-1 block">ระบุประเมินราคาซ่อมเพื่อให้ลูกค้าทราบในระบบ</span>
+                        </div>
+
+                        <div>
                             <label class="block text-sm font-semibold text-gray-600 mb-2">บันทึกความคืบหน้า (แจ้งผู้แจ้ง):</label>
-                            <textarea name="admin_notes" rows="6" class="w-full border border-gray-200 rounded-xl p-3 text-sm focus:ring-2 focus:ring-indigo-200 placeholder-gray-400" placeholder="เช่น ช่างตรวจอาการบอร์ดเสียแล้ว รอสั่งอะไหล่ 3 วัน...">{{ $claim->admin_notes }}</textarea>
+                            <textarea name="admin_notes" rows="5" class="w-full border border-gray-200 rounded-xl p-3 text-sm focus:ring-2 focus:ring-indigo-200 placeholder-gray-400" placeholder="เช่น ช่างตรวจอาการบอร์ดเสียแล้ว รอสั่งอะไหล่ 3 วัน...">{{ $claim->admin_notes }}</textarea>
                         </div>
 
                         <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm py-3 rounded-xl transition duration-150 shadow-sm shadow-indigo-100">

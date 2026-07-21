@@ -27,7 +27,7 @@
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 mb-6 flex flex-col md:flex-row gap-4 items-center">
                 <div class="relative flex-grow w-full md:w-auto">
                     <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                    <input type="text" x-model="search" placeholder="ค้นหาชื่อสินค้า หรือรหัส ID..." 
+                    <input type="text" x-model="search" placeholder="ค้นหาชื่อสินค้า, SKU หรือรหัส ID..." 
                            class="w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 text-sm font-medium">
                 </div>
                 <select x-model="categoryFilter" class="px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 text-sm font-semibold bg-white min-w-[160px]">
@@ -62,7 +62,7 @@
                         <tbody class="divide-y divide-gray-50">
                             @forelse($products as $product)
                             <tr class="hover:bg-indigo-50/30 transition-colors"
-                                x-show="(search === '' || '{{ strtolower($product->name) }}'.includes(search.toLowerCase()) || '{{ strtolower($product->id) }}'.includes(search.toLowerCase())) && (categoryFilter === 'all' || '{{ $product->category->name ?? '' }}' === categoryFilter) && (brandFilter === 'all' || '{{ $product->brand->name ?? '' }}' === brandFilter)"
+                                x-show="(search === '' || '{{ strtolower($product->name) }}'.includes(search.toLowerCase()) || '{{ strtolower($product->id) }}'.includes(search.toLowerCase()) || '{{ strtolower($product->sku) }}'.includes(search.toLowerCase())) && (categoryFilter === 'all' || '{{ $product->category->name ?? '' }}' === categoryFilter) && (brandFilter === 'all' || '{{ $product->brand->name ?? '' }}' === brandFilter)"
                                 x-cloak>
                                 <td class="py-4 px-4 flex justify-center">
                                     @if($product->images->where('is_primary', true)->first())
@@ -80,7 +80,12 @@
                                 </td>
                                 <td class="py-4 px-4">
                                     <div class="font-bold text-slate-800">{{ $product->name }}</div>
-                                    <div class="text-xs text-slate-400 mt-0.5">ID: {{ $product->id }}</div>
+                                    <div class="text-xs text-slate-400 mt-0.5 flex items-center gap-2">
+                                        <span>ID: {{ $product->id }}</span>
+                                        @if($product->sku)
+                                        <span class="bg-slate-100 text-slate-700 px-1.5 py-0.5 rounded text-[11px] font-mono font-semibold">SKU: {{ $product->sku }}</span>
+                                        @endif
+                                    </div>
                                 </td>
                                 <td class="py-4 px-4">
                                     <span class="px-3 py-1 text-xs font-semibold bg-blue-50 text-blue-700 rounded-full">

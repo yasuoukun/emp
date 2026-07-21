@@ -19,18 +19,19 @@
     <div x-data="{ mobileMenuOpen: false }">
 
     <!-- Top Bar -->
-    <div class="topbar">
+    <div class="topbar" style="position: relative; z-index: 1100;">
         <div class="topbar-left">
             <a href="#"><i class="fa-brands fa-facebook"></i> Facebook</a>
             <a href="#"><i class="fa-brands fa-line"></i> Line</a>
         </div>
         <div class="topbar-right" x-data="{ openProfile: false }">
             @auth
-                <div style="position: relative; display: inline-block;">
-                    <button @click="openProfile = !openProfile" @click.away="openProfile = false" style="background: none; border: none; color: white; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 5px; font-family: 'Prompt', sans-serif;">
-                        👤 {{ auth()->user()->name }} <span style="font-size: 0.75rem;">▼</span>
+                <div style="position: relative; display: inline-block; z-index: 1200;">
+                    <button @click="openProfile = !openProfile" @click.away="openProfile = false" style="background: none; border: none; color: white; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-family: 'Prompt', sans-serif;">
+                        <img src="{{ auth()->user()->avatar_url }}" alt="" style="width: 26px; height: 26px; border-radius: 50%; object-fit: cover; border: 1.5px solid rgba(255,255,255,0.6);">
+                        <span>{{ auth()->user()->name }}</span> <span style="font-size: 0.75rem;">▼</span>
                     </button>
-                    <div x-show="openProfile" x-transition style="display: none; position: absolute; right: 0; top: 100%; margin-top: 8px; background: white; border: 1px solid var(--color-silver); border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); z-index: 1000; min-width: 180px; text-align: left; padding: 0.5rem 0;">
+                    <div x-show="openProfile" x-transition style="display: none; position: absolute; right: 0; top: 100%; margin-top: 8px; background: white; border: 1px solid var(--color-silver); border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); z-index: 9999; min-width: 180px; text-align: left; padding: 0.5rem 0;">
                         <a href="{{ route('dashboard') }}" style="display: block; padding: 10px 15px; color: var(--color-navy-dark); text-decoration: none; font-weight: 500; font-size: 0.9rem;" onmouseover="this.style.background='var(--color-grey-bg)'" onmouseout="this.style.background='transparent'">
                             💻 แดชบอร์ด/โปรไฟล์
                         </a>
@@ -56,7 +57,7 @@
                 @endif
             @endauth
             <!-- Notification Bell -->
-            <div x-data="{ openNotification: false }" style="position: relative; display: inline-block; margin-left: 1.25rem;">
+            <div x-data="{ openNotification: false }" style="position: relative; display: inline-block; margin-left: 1.25rem; z-index: 1200;">
                 <button @click="openNotification = !openNotification" @click.away="openNotification = false" title="การแจ้งเตือน" style="background: none; border: none; color: white; cursor: pointer; display: flex; align-items: center; position: relative;">
                     <i class="fa-solid fa-bell" style="font-size: 1.1rem;"></i>
                     @auth
@@ -68,7 +69,7 @@
                     @endauth
                 </button>
                 @auth
-                    <div x-show="openNotification" x-transition style="display: none; position: absolute; right: 0; top: 100%; margin-top: 15px; background: white; border: 1px solid var(--color-silver); border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); z-index: 1000; width: 320px; text-align: left; padding: 0; overflow: hidden;">
+                    <div x-show="openNotification" x-transition style="display: none; position: absolute; right: 0; top: 100%; margin-top: 15px; background: white; border: 1px solid var(--color-silver); border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); z-index: 9999; width: 320px; text-align: left; padding: 0; overflow: hidden;">
                         <div style="padding: 12px 15px; background: var(--color-grey-bg); border-bottom: 1px solid var(--color-silver); display: flex; justify-content: space-between; align-items: center;">
                             <h4 style="margin: 0; font-size: 0.95rem; font-weight: 700; color: var(--color-navy-dark);">การแจ้งเตือน</h4>
                             @if(auth()->user()->unreadNotifications->count() > 0)
@@ -114,15 +115,16 @@
     </div>
 
     <!-- Navbar -->
-    <nav class="navbar">
+    <nav class="navbar" id="main-navbar">
         <a href="{{ url('/') }}" class="navbar-brand">
-            ดีดี.ไอที.คอม
+            <img src="{{ asset('images/logodd.png') }}" alt="DDIT Logo" style="height: 38px; width: auto; object-fit: contain;" onerror="this.style.display='none'">
+            <span>ดีดี.ไอที.คอม</span>
         </a>
         <!-- Search Bar -->
-        <form action="{{ route('products.index') }}" method="GET" style="margin: 0; display: flex; align-items: center; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 6px 14px; width: 280px; max-width: 100%;">
-            <input type="text" name="q" value="{{ request('q') }}" placeholder="ค้นหา iPad, Mac, iPhone..." style="background: none; border: none; outline: none; color: white; width: 100%; font-family: 'Prompt', sans-serif; font-size: 0.85rem;">
-            <button type="submit" style="background: none; border: none; color: rgba(255,255,255,0.7); cursor: pointer; padding: 2px 0 2px 8px;">
-                <i class="fa-solid fa-magnifying-glass" style="font-size: 0.9rem;"></i>
+        <form action="{{ route('products.index') }}" method="GET" style="margin: 0 0.5rem; display: flex; align-items: center; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 6px 12px; width: 210px; max-width: 100%; flex-shrink: 0;">
+            <input type="text" name="q" value="{{ request('q') }}" placeholder="ค้นหา iPad, Mac..." style="background: none; border: none; outline: none; color: white; width: 100%; font-family: 'Prompt', sans-serif; font-size: 0.82rem;">
+            <button type="submit" style="background: none; border: none; color: rgba(255,255,255,0.7); cursor: pointer; padding: 2px 0 2px 6px;">
+                <i class="fa-solid fa-magnifying-glass" style="font-size: 0.85rem;"></i>
             </button>
         </form>
         <div class="navbar-links">
@@ -133,13 +135,12 @@
             
             <!-- Services Dropdown -->
             <div class="navbar-item-dropdown">
-                <a href="#" class="navbar-dropdown-trigger" onclick="event.preventDefault()">
+                <a href="#" class="navbar-dropdown-trigger" onclick="toggleStoreDropdown(this, event)">
                     บริการ & โซลูชัน <span style="font-size: 0.7rem;">▼</span>
                 </a>
                 <div class="navbar-dropdown-menu">
                     <a href="{{ route('services') }}">🛠️ บริการทั้งหมดของเรา</a>
                     <a href="{{ route('installment') }}">💳 บริการผ่อนชำระ</a>
-                    <a href="{{ route('trade_in') }}">🔄 เทรดอินเครื่องเก่า</a>
                     <a href="{{ route('education') }}">🎓 โซลูชันเพื่อการศึกษา</a>
                     <a href="{{ route('business') }}">🏢 โซลูชันสำหรับธุรกิจองค์กร</a>
                 </div>
@@ -147,7 +148,7 @@
             
             <!-- Service Center Dropdown -->
             <div class="navbar-item-dropdown">
-                <a href="#" class="navbar-dropdown-trigger" onclick="event.preventDefault()">
+                <a href="#" class="navbar-dropdown-trigger" onclick="toggleStoreDropdown(this, event)">
                     ศูนย์ซ่อม & ติดตาม <span style="font-size: 0.7rem;">▼</span>
                 </a>
                 <div class="navbar-dropdown-menu">
@@ -211,7 +212,6 @@
                  <div id="services-sub" style="display: none; flex-direction: column; gap: 0.5rem; padding-left: 1.25rem; border-left: 1.5px solid rgba(255,255,255,0.08); margin-left: 18px; margin-top: 0.15rem;">
                      <a href="{{ route('services') }}" style="color: var(--color-silver); text-decoration: none; font-size: 0.8rem;">🛠️ บริการทั้งหมดของเรา</a>
                      <a href="{{ route('installment') }}" style="color: var(--color-silver); text-decoration: none; font-size: 0.8rem;">💳 บริการผ่อนชำระ</a>
-                     <a href="{{ route('trade_in') }}" style="color: var(--color-silver); text-decoration: none; font-size: 0.8rem;">🔄 เทรดอินเครื่องเก่า</a>
                      <a href="{{ route('education') }}" style="color: var(--color-silver); text-decoration: none; font-size: 0.8rem;">🎓 โซลูชันเพื่อการศึกษา</a>
                      <a href="{{ route('business') }}" style="color: var(--color-silver); text-decoration: none; font-size: 0.8rem;">🏢 โซลูชันสำหรับธุรกิจองค์กร</a>
                  </div>
@@ -266,11 +266,14 @@
 
     <!-- Footer -->
     <footer class="footer" style="border-top: 1px solid rgba(255,255,255,0.05);">
-        <div class="container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2.5rem;">
+        <div class="container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2.5rem;">
             <div>
                 <h3 style="font-weight: 700; font-size: 1.3rem; color: white; margin-bottom: 1rem;">บริษัท ดีดี.ไอที.คอม จำกัด</h3>
                 <p style="color: rgba(160, 174, 192, 0.9); line-height: 1.7; font-size: 0.9rem;">ผู้เชี่ยวชาญทางด้านสินค้าโทรศัพท์มือถือและสินค้าไอทีแบบครบวงจร</p>
                 <p style="color: rgba(160, 174, 192, 0.7); font-size: 0.85rem; margin-top: 0.75rem;">📍 72/47-48ก ถนนชัยประสิทธิ์ ต.ในเมือง<br>อ.เมือง จ.ชัยภูมิ 36000</p>
+                <a href="https://maps.app.goo.gl/YyGucac8fsKzP4q28" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); padding: 6px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 600; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='#ef4444'; this.style.color='white'" onmouseout="this.style.background='rgba(239, 68, 68, 0.15)'; this.style.color='#f87171'">
+                    <i class="fa-solid fa-map-location-dot"></i> ดูแผนที่บน Google Maps ↗
+                </a>
             </div>
             <div>
                 <h3 style="font-weight: 700; font-size: 1rem; color: white; margin-bottom: 1rem;">ช่องทางติดต่อ</h3>
@@ -286,18 +289,19 @@
                 <h3 style="font-weight: 700; font-size: 1rem; color: white; margin-bottom: 1rem;">บริการพิเศษ</h3>
                 <div style="display: flex; flex-direction: column; gap: 8px;">
                     <a href="{{ route('installment') }}" style="color: rgba(160, 174, 192, 0.9); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(160, 174, 192, 0.9)'">คำนวณยอดผ่อนชำระ</a>
-                    <a href="{{ route('trade_in') }}" style="color: rgba(160, 174, 192, 0.9); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(160, 174, 192, 0.9)'">เทรดอินตีราคาเครื่อง</a>
                     <a href="{{ route('education') }}" style="color: rgba(160, 174, 192, 0.9); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(160, 174, 192, 0.9)'">โซลูชันเพื่อการศึกษา</a>
                     <a href="{{ route('business') }}" style="color: rgba(160, 174, 192, 0.9); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(160, 174, 192, 0.9)'">โซลูชันสำหรับธุรกิจองค์กร</a>
                 </div>
             </div>
             <div>
-                <h3 style="font-weight: 700; font-size: 1rem; color: white; margin-bottom: 1rem;">ช่วยเหลือ & ตรวจสอบ</h3>
-                <div style="display: flex; flex-direction: column; gap: 8px;">
-                    <a href="{{ route('service_center') }}" style="color: rgba(160, 174, 192, 0.9); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(160, 174, 192, 0.9)'">ศูนย์บริการซ่อม/เคลม</a>
-                    <a href="{{ route('tracking') }}" style="color: rgba(160, 174, 192, 0.9); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(160, 174, 192, 0.9)'">ติดตามสถานะการส่งซ่อม</a>
-                    <a href="{{ route('help_center') }}" style="color: rgba(160, 174, 192, 0.9); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(160, 174, 192, 0.9)'">ศูนย์ช่วยเหลือ & FAQ</a>
-                </div>
+                <h3 style="font-weight: 700; font-size: 1rem; color: white; margin-bottom: 1rem;">📍 แผนที่ร้านค้า (Google Maps)</h3>
+                <a href="https://maps.app.goo.gl/YyGucac8fsKzP4q28" target="_blank" style="display: block; position: relative; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 4px 15px rgba(0,0,0,0.2); text-decoration: none; transition: transform 0.2s ease;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                    <img src="{{ asset('images/store_map.png') }}" alt="แผนที่หน้าร้าน DD.IT.COM" style="width: 100%; height: 130px; object-fit: cover; display: block;">
+                    <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(15, 23, 42, 0.95)); padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; color: white;">
+                        <span style="font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; gap: 6px;">📍 นำทางไปยังร้านค้า</span>
+                        <span style="font-size: 0.72rem; background: #ef4444; color: white; padding: 2px 8px; border-radius: 10px; font-weight: 700;">เปิด Google Maps ↗</span>
+                    </div>
+                </a>
             </div>
         </div>
         <div style="border-top: 1px solid rgba(255,255,255,0.06); margin-top: 2rem; padding-top: 1.5rem; text-align: center; color: rgba(160, 174, 192, 0.5); font-size: 0.8rem;">
@@ -421,6 +425,16 @@
         });
     </script>
     <script>
+        window.addEventListener('scroll', function() {
+            const nav = document.getElementById('main-navbar');
+            if (nav) {
+                if (window.scrollY > 30) {
+                    nav.classList.add('navbar-scrolled');
+                } else {
+                    nav.classList.remove('navbar-scrolled');
+                }
+            }
+        });
         function toggleMobileMenu() {
             const drawer = document.querySelector('.mobile-drawer');
             const overlay = document.querySelector('.mobile-drawer-overlay');
@@ -446,7 +460,25 @@
                     if (arrow) arrow.style.transform = 'rotate(0deg)';
                 }
             }
+        function toggleStoreDropdown(element, event) {
+            if (event) event.preventDefault();
+            const parent = element.closest('.navbar-item-dropdown');
+            if (!parent) return;
+            
+            document.querySelectorAll('.navbar-item-dropdown').forEach(item => {
+                if (item !== parent) item.classList.remove('active');
+            });
+
+            parent.classList.toggle('active');
         }
+
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.navbar-item-dropdown')) {
+                document.querySelectorAll('.navbar-item-dropdown').forEach(item => {
+                    item.classList.remove('active');
+                });
+            }
+        });
     </script>
 </div>
 </body>

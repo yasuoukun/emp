@@ -7,8 +7,8 @@
     <aside style="width: 280px; flex-shrink: 0;">
         <div style="background: white; padding: 1.75rem; border-radius: 20px; border: 1px solid rgba(226, 232, 240, 0.8); box-shadow: 0 10px 30px rgba(27, 42, 71, 0.05); position: sticky; top: 100px;">
             <div style="text-align: center; margin-bottom: 2rem;">
-                <div style="width: 85px; height: 85px; background: linear-gradient(135deg, var(--color-indigo) 0%, var(--color-purple) 100%); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.4rem; margin: 0 auto 1.25rem; box-shadow: 0 8px 20px rgba(99, 102, 241, 0.25);">
-                    👤
+                <div style="position: relative; width: 85px; height: 85px; margin: 0 auto 1.25rem;">
+                    <img src="{{ auth()->user()->avatar_url }}" alt="{{ auth()->user()->name }}" style="width: 85px; height: 85px; border-radius: 50%; object-fit: cover; border: 3px solid var(--color-silver); box-shadow: 0 8px 20px rgba(0,0,0,0.1);">
                 </div>
                 <h3 style="font-size: 1.3rem; font-weight: 700; color: var(--color-navy-dark); margin-bottom: 0.35rem;">{{ auth()->user()->name }}</h3>
                 <p style="font-size: 0.85rem; color: var(--color-grey-light); margin: 0; font-weight: 500;">{{ auth()->user()->email }}</p>
@@ -36,6 +36,9 @@
                 <button @click="tab = 'quotations'" :class="tab === 'quotations' ? 'active-nav-btn' : 'inactive-nav-btn'">
                     <span>📄</span> ใบเสนอราคาของฉัน
                 </button>
+                <button @click="tab = 'repairs'" :class="tab === 'repairs' ? 'active-nav-btn' : 'inactive-nav-btn'">
+                    <span>🛠️</span> งานซ่อม/เคลมของฉัน
+                </button>
                 
                 <hr style="border: 0; border-top: 1px solid var(--color-silver); margin: 1rem 0;">
 
@@ -56,17 +59,33 @@
         <div x-show="tab === 'profile'">
             <h2 style="font-size: 1.6rem; color: var(--color-navy-dark); margin-bottom: 1.5rem; border-bottom: 2px solid var(--color-silver); padding-bottom: 0.75rem; font-weight: 700;">ข้อมูลส่วนตัว</h2>
             
-            <form action="{{ route('profile.update') }}" method="POST" style="max-width: 600px;">
+            <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data" style="max-width: 600px;">
                 @csrf
                 @method('patch')
+
+                <!-- Avatar Upload Section -->
+                <div style="margin-bottom: 1.75rem; display: flex; align-items: center; gap: 20px;">
+                    <img id="avatar-preview" src="{{ auth()->user()->avatar_url }}" alt="Profile Avatar" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid var(--color-silver);">
+                    <div>
+                        <label style="display: block; font-weight: 600; margin-bottom: 0.35rem; color: var(--color-navy-dark); font-size: 0.95rem;">รูปภาพโปรไฟล์</label>
+                        <input type="file" name="avatar" accept="image/*" onchange="if(this.files[0]) document.getElementById('avatar-preview').src = URL.createObjectURL(this.files[0])" style="font-size: 0.85rem; color: var(--color-grey);">
+                        <p style="margin: 4px 0 0; font-size: 0.75rem; color: #94a3b8;">แนะนำเป็นรูปภาพสี่เหลี่ยมจัตุรัส ขนาดไม่เกิน 4MB (JPG, PNG, WEBP)</p>
+                    </div>
+                </div>
+
                 <div style="margin-bottom: 1.5rem;">
                     <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--color-navy-dark); font-size: 0.95rem;">ชื่อ-นามสกุล</label>
                     <input type="text" name="name" value="{{ auth()->user()->name }}" required style="width: 100%; padding: 12px; border: 1px solid var(--color-silver); border-radius: 8px; font-family: inherit; font-size: 1rem; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--color-navy)'" onblur="this.style.borderColor='var(--color-silver)'">
                 </div>
 
-                <div style="margin-bottom: 2rem;">
+                <div style="margin-bottom: 1.5rem;">
                     <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--color-navy-dark); font-size: 0.95rem;">อีเมล</label>
                     <input type="email" name="email" value="{{ auth()->user()->email }}" required style="width: 100%; padding: 12px; border: 1px solid var(--color-silver); border-radius: 8px; font-family: inherit; font-size: 1rem; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--color-navy)'" onblur="this.style.borderColor='var(--color-silver)'">
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--color-navy-dark); font-size: 0.95rem;">เบอร์โทรศัพท์ติดต่อ</label>
+                    <input type="text" name="phone" value="{{ auth()->user()->phone }}" placeholder="เช่น 0812345678" style="width: 100%; padding: 12px; border: 1px solid var(--color-silver); border-radius: 8px; font-family: inherit; font-size: 1rem; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--color-navy)'" onblur="this.style.borderColor='var(--color-silver)'">
                 </div>
 
                 <button type="submit" style="padding: 12px 30px; background: linear-gradient(135deg, var(--color-navy) 0%, var(--color-navy-light) 100%); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 10px rgba(27, 42, 71, 0.25); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">
@@ -581,6 +600,77 @@
                     <p style="margin: 0; font-weight: 600;">ยังไม่เคยส่งใบเสนอราคาออนไลน์</p>
                     <a href="{{ route('quotation.generate') }}" style="display: inline-block; margin-top: 1rem; padding: 10px 20px; background: var(--color-navy); color: white; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem;">
                         สร้างใบเสนอราคาเดี๋ยวนี้
+                    </a>
+                </div>
+                @endforelse
+            </div>
+        </div>
+
+        <!-- TAB 8: Repair Claims -->
+        <div x-show="tab === 'repairs'" style="display: none;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 2px solid var(--color-silver); padding-bottom: 0.75rem;">
+                <h2 style="font-size: 1.6rem; color: var(--color-navy-dark); margin: 0; font-weight: 700;">ติดตามงานซ่อม/เคลมของฉัน</h2>
+                <a href="{{ route('service_center') }}" style="background: var(--color-navy-dark); color: white; text-decoration: none; padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 0.85rem;">
+                    + แจ้งส่งซ่อม/เคลมใหม่
+                </a>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+                @forelse($claims as $clm)
+                <div style="border: 1px solid var(--color-silver); border-radius: 12px; padding: 1.5rem; background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.02);">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; border-bottom: 1px solid var(--color-silver-light); padding-bottom: 0.75rem;">
+                        <div>
+                            <span style="font-weight: 800; color: var(--color-navy); font-size: 1.1rem;">{{ $clm->id }}</span>
+                            <span style="font-size: 0.85rem; color: var(--color-grey); margin-left: 10px;">{{ $clm->created_at->format('d/m/Y H:i') }}</span>
+                            <h4 style="margin: 5px 0 0; color: var(--color-navy-dark); font-size: 1rem; font-weight: 700;">📱 {{ $clm->device_name }} {{ $clm->serial_number ? '(S/N: '.$clm->serial_number.')' : '' }}</h4>
+                        </div>
+                        <div>
+                            @if($clm->status === 'pending')
+                                <span style="background: #FEF3C7; color: #D97706; font-size: 0.8rem; font-weight: 700; padding: 4px 12px; border-radius: 99px;">⏳ ได้รับแจ้งเรื่อง</span>
+                            @elseif($clm->status === 'received')
+                                <span style="background: #DBEAFE; color: #2563EB; font-size: 0.8rem; font-weight: 700; padding: 4px 12px; border-radius: 99px;">📦 ได้รับเครื่องแล้ว</span>
+                            @elseif($clm->status === 'in_progress')
+                                <span style="background: #E0E7FF; color: #4F46E5; font-size: 0.8rem; font-weight: 700; padding: 4px 12px; border-radius: 99px;">🛠️ กำลังซ่อม/ดำเนินการ</span>
+                            @elseif($clm->status === 'completed')
+                                <span style="background: #D1FAE5; color: #059669; font-size: 0.8rem; font-weight: 700; padding: 4px 12px; border-radius: 99px;">✅ เสร็จสิ้นส่งคืน</span>
+                            @else
+                                <span style="background: #FEE2E2; color: #DC2626; font-size: 0.8rem; font-weight: 700; padding: 4px 12px; border-radius: 99px;">❌ ยกเลิก</span>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div style="font-size: 0.9rem; color: var(--color-grey); margin-bottom: 1rem; line-height: 1.6;">
+                        <strong>รายละเอียดปัญหา:</strong> {{ $clm->issue_description }}
+                    </div>
+
+                    @if($clm->estimated_cost)
+                    <div style="background: #FFFBEB; border: 1px solid #FCD34D; border-radius: 8px; padding: 10px 14px; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: #92400E; font-size: 0.85rem; font-weight: 600;">💰 ค่าซ่อมประเมินเบื้องต้น:</span>
+                        <strong style="color: #D97706; font-size: 1.1rem;">฿{{ number_format($clm->estimated_cost, 2) }}</strong>
+                    </div>
+                    @endif
+
+                    @if(!empty($clm->admin_notes))
+                    <div style="background: var(--color-grey-bg); padding: 10px 14px; border-radius: 8px; border-left: 3px solid var(--color-navy); margin-bottom: 1rem; font-size: 0.85rem; color: var(--color-navy-dark);">
+                        <strong>✍️ อัปเดตจากช่าง:</strong> {{ $clm->admin_notes }}
+                    </div>
+                    @endif
+
+                    <div style="display: flex; gap: 10px; justify-content: flex-end; align-items: center;">
+                        <a href="{{ route('tracking', ['q' => $clm->id, 'type' => 'claim']) }}" style="background: white; border: 1px solid var(--color-silver); color: var(--color-navy-dark); text-decoration: none; padding: 6px 14px; border-radius: 6px; font-weight: 600; font-size: 0.8rem;">
+                            🔍 ดูรายละเอียดในระบบติดตาม
+                        </a>
+                        <button type="button" onclick="window.dispatchEvent(new CustomEvent('open-customer-chat'))" style="background: var(--color-navy); color: white; border: none; padding: 6px 14px; border-radius: 6px; font-weight: 600; font-size: 0.8rem; cursor: pointer;">
+                            💬 สอบถามแอดมินทางแชท
+                        </button>
+                    </div>
+                </div>
+                @empty
+                <div style="text-align: center; padding: 4rem 2rem; color: var(--color-grey);">
+                    <span style="font-size: 3rem; display: block; margin-bottom: 1rem;">🛠️</span>
+                    <p style="margin: 0; font-weight: 600;">ยังไม่มีประวัติการส่งซ่อมหรือเคลมสินค้า</p>
+                    <a href="{{ route('service_center') }}" style="display: inline-block; margin-top: 1rem; padding: 10px 20px; background: var(--color-navy); color: white; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem;">
+                        แจ้งส่งซ่อมของร้านเดี๋ยวนี้
                     </a>
                 </div>
                 @endforelse

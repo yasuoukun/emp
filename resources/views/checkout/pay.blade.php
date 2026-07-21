@@ -15,10 +15,13 @@
                 <div class="item-row">
                     <div class="item-pic-info">
                         @if($item->product && $item->product->images->isNotEmpty())
-                            @if(str_starts_with($item->product->images->first()->image_path, 'http'))
-                                <img src="{{ $item->product->images->first()->image_path }}" alt="{{ $item->product->name }}" class="item-thumb">
+                            @php
+                                $itemImgPath = $item->product->images->first()->image_path;
+                            @endphp
+                            @if(str_starts_with($itemImgPath, 'http'))
+                                <img src="{{ $itemImgPath }}" alt="{{ $item->product->name }}" class="item-thumb">
                             @else
-                                <img src="{{ asset('storage/' . $item->product->images->first()->image_path) }}" alt="{{ $item->product->name }}" class="item-thumb">
+                                <img src="{{ Storage::url($itemImgPath) }}" alt="{{ $item->product->name }}" class="item-thumb">
                             @endif
                         @else
                             <div class="item-thumb-placeholder">📱</div>

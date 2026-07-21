@@ -2,6 +2,59 @@
 
 @section('content')
 <div class="container" style="max-width: 900px; margin: 3rem auto; padding: 0 1rem;">
+    <!-- Auto-Sliding Promotion Banners Carousel -->
+    @if(isset($banners) && count($banners) > 0)
+    <div x-data="{ 
+        currentSlide: 0, 
+        totalSlides: {{ count($banners) }},
+        timer: null,
+        init() {
+            this.startAutoSlide();
+        },
+        startAutoSlide() {
+            this.timer = setInterval(() => {
+                this.nextSlide();
+            }, 4000);
+        },
+        nextSlide() {
+            this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
+        },
+        prevSlide() {
+            this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides;
+        }
+    }" @mouseenter="clearInterval(timer)" @mouseleave="startAutoSlide()" 
+       style="position: relative; width: 100%; border-radius: 20px; overflow: hidden; margin-bottom: 3rem; box-shadow: 0 15px 35px rgba(0,0,0,0.1); background: #0F172A; aspect-ratio: 21/9; max-height: 380px;">
+        
+        <!-- Slide Items -->
+        @foreach($banners as $index => $banner)
+        <div x-show="currentSlide === {{ $index }}" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" style="position: absolute; inset: 0; width: 100%; height: 100%;">
+            @if($banner->link_url)
+                <a href="{{ $banner->link_url }}" target="_blank" style="display: block; width: 100%; height: 100%;">
+                    <img src="{{ str_starts_with($banner->image_path, 'http') ? $banner->image_path : Storage::url($banner->image_path) }}" alt="Promotion Banner" style="width: 100%; height: 100%; object-fit: cover;">
+                </a>
+            @else
+                <img src="{{ str_starts_with($banner->image_path, 'http') ? $banner->image_path : Storage::url($banner->image_path) }}" alt="Promotion Banner" style="width: 100%; height: 100%; object-fit: cover;">
+            @endif
+        </div>
+        @endforeach
+
+        <!-- Navigation Arrows -->
+        <button type="button" @click="prevSlide()" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.4); color: white; border: none; width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; backdrop-filter: blur(4px); transition: background 0.2s;" onmouseover="this.style.background='rgba(0,0,0,0.7)'" onmouseout="this.style.background='rgba(0,0,0,0.4)'">
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <button type="button" @click="nextSlide()" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.4); color: white; border: none; width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; backdrop-filter: blur(4px); transition: background 0.2s;" onmouseover="this.style.background='rgba(0,0,0,0.7)'" onmouseout="this.style.background='rgba(0,0,0,0.4)'">
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
+
+        <!-- Dots Indicators -->
+        <div style="position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 10;">
+            @foreach($banners as $index => $banner)
+            <button type="button" @click="currentSlide = {{ $index }}" :style="currentSlide === {{ $index }} ? 'background: #FF4500; width: 24px;' : 'background: rgba(255,255,255,0.6); width: 10px;'" style="height: 10px; border-radius: 5px; border: none; cursor: pointer; transition: all 0.3s;"></button>
+            @endforeach
+        </div>
+    </div>
+    @endif
+
     <div style="text-align: center; margin-bottom: 3rem;">
         <h2 style="font-size: 2.2rem; color: var(--color-navy-dark); font-weight: 700; margin-bottom: 0.5rem; font-family: 'Prompt', sans-serif;">🎉 คูปองส่วนลด & โปรโมชันพิเศษ</h2>
         <p style="color: var(--color-grey); font-size: 1.1rem;">เก็บโค้ดส่วนลดด้านล่างไปใช้ในขั้นตอนชำระเงินเพื่อรับส่วนลดสุดคุ้ม!</p>
@@ -93,19 +146,26 @@
             @forelse($discountedProducts as $product)
             @php
                 $primaryImage = $product->images->where('is_primary', true)->first() ?? $product->images->first();
-                $imagePath = $primaryImage ? asset('storage/' . $primaryImage->image_path) : 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=300&auto=format&fit=crop';
-                $discountAmount = $product->price - $product->discount_price;
-                $discountPercent = round(($discountAmount / $product->price) * 100);
+                if ($primaryImage) {
+                    $imgPath = $primaryImage->image_path;
+                    $imagePath = str_starts_with($imgPath, 'http') ? $imgPath : Storage::url($imgPath);
+                } else {
+                    $imagePath = 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=300&auto=format&fit=crop';
+                }
+                $discountAmount = $product->price - ($product->discount_price ?? 0);
+                $discountPercent = $product->price > 0 ? round(($discountAmount / $product->price) * 100) : 0;
             @endphp
             <div style="background: white; border: 1px solid var(--color-silver-light); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.02); display: flex; flex-direction: column; transition: all 0.2s;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 12px 24px rgba(0,0,0,0.06)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.02)'">
                 <!-- Image Wrapper -->
-                <div style="position: relative; padding-top: 100%; background: #f8fafc;">
-                    <img src="{{ $imagePath }}" alt="{{ $product->name }}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; padding: 10px;">
+                <div style="position: relative; height: 190px; background: #f8fafc; display: flex; align-items: center; justify-content: center; padding: 12px;">
+                    <img src="{{ $imagePath }}" alt="{{ $product->name }}" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px;">
                     
                     <!-- Discount Badge -->
-                    <span style="position: absolute; top: 12px; left: 12px; background: #ef4444; color: white; padding: 4px 10px; border-radius: 99px; font-weight: 700; font-size: 0.8rem; box-shadow: 0 2px 5px rgba(239, 68, 68, 0.3);">
+                    @if($discountPercent > 0)
+                    <span style="position: absolute; top: 12px; left: 12px; background: #ef4444; color: white; padding: 4px 10px; border-radius: 99px; font-weight: 700; font-size: 0.8rem; box-shadow: 0 2px 5px rgba(239, 68, 68, 0.3); z-index: 2;">
                         ลด {{ $discountPercent }}%
                     </span>
+                    @endif
                 </div>
 
                 <!-- Product Details -->

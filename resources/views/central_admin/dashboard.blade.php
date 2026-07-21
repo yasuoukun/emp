@@ -133,6 +133,9 @@
                 </div>
             </div>
 
+            <!-- Product & Sales Intelligence Section -->
+            @include('admin.dashboard_analytics')
+
         </div>
     </div>
 
